@@ -73,7 +73,7 @@
 		// Don"t use a data-* attribute to set this (that's just ugly)
 		skeleton: "" +
 			"<div class='lightbox'>" +
-				"<a href='#' class='lightbox-close ir'>Close</a>" +
+				"<a href='#' class='lightbox-close ir'>X</a>" +
 			"</div>"
 		// onOpen, onClose ( cannot be extended with data-*, so do not include them in defaults )
 	};
