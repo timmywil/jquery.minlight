@@ -18,7 +18,8 @@
 }(function( $ ) {
 	"use strict";
 
-	var // Used to construct an id for the target using the data-target selector (even if it"s not an id)
+	var // Used to construct an id for the target using
+		// the data-target selector (even if it's not an id)
 		rselect = /[\#\.\s\,]/g,
 
 		// Used to convert camelCase to dashed
@@ -69,7 +70,7 @@
 		// This is sometimes not ideal if the container is something other than the body
 		expandMask: true,
 		// The basic skeleton for a lightbox
-		// Don"t use a data-* attribute to set this (that"s just ugly)
+		// Don"t use a data-* attribute to set this (that's just ugly)
 		skeleton: "" +
 			"<div class='lightbox'>" +
 				"<a href='#' class='lightbox-close ir'>Close</a>" +
