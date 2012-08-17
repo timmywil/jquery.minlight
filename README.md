@@ -12,11 +12,15 @@ minLight is meant to create the most common, simple lightboxes. Tests and more d
 
 ## Options
 
-All options can be overridden by passing an object literal like any other plugin
-OR with data-* attributes on the link (which can be very useful when calling minLight on more than one link at a time)
-e.g. `<a href="something.jpg" title="alt text" data-fade-time="300" data-img-width="750" data-container="#main" data-target="#awesome-lightbox">Open Lightbox</a>`
+All options can be overridden by passing an object literal like any other plugin<br>
+OR with data-* attributes on the link (which can be very useful when calling minLight on more than one link at a time).
 
-Order of precendence: data-* attributes > options passed on creation > defaults
+e.g.
+
+	<a href="something.jpg" title="alt text" data-fade-time="300" data-img-width="750"
+		data-container="#main" data-target="#awesome-lightbox">Open Lightbox</a>
+
+__Order of precendence: data-* attributes > options passed on creation > defaults__
 
 	Lightbox.defaults = {
 		fadeTime: "slow",
