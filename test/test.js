@@ -61,7 +61,7 @@ test("Usage", 14, function() {
 	instance = $min.minLight("instance");
 	$target = instance.$target;
 
-	ok( $target[0].id, "target is awesome-lightbox" );
+	equal( $target[0].id, "awesome-lightbox", "target is awesome-lightbox" );
 	ok( instance.$mask[0].parentNode, "Mask present" );
 
 	$min.minLight("option", {
