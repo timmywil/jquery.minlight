@@ -1,6 +1,6 @@
 # jQuery minLight lightbox plugin
 
-minLight is meant to create the most common, simple lightboxes.
+minLight is meant to create the most common, simple lightboxes that use a customizable fading animation.
 
 
 ## Usage
@@ -64,25 +64,25 @@ Methods can be called in the same way as a widget from the UI widget factory. Pa
 
 Open the lightbox
 
-### 'close'
+### `close`
 
 	$link.minLight("close");
 
 Close the lightbox
 
-### 'destroy'
+### `destroy`
 
 	$link.minLight("destroy");
 
 Unbinds all events and removes all data, including the minLight instance on the element.
 
-### 'instance'
+### `instance`
 
 	var minInstance = $link.minLight("instance");
 
 Retreives the minLight instance(s) from the set. If there are multiple, you will get an array of instances. If there is only one, you will just get the instance of minLight.
 
-### 'option'
+### `option`
 
 	// One at a time
 	$link.minLight("option", "onOpen", function() {
