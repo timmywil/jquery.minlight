@@ -93,13 +93,13 @@
 				$target = $( target );
 
 			if ( !$target.length ) {
-				// Create a new target and mask if they do not exist on the page
+				// Create a new target if they do not exist on the page
 				id = $target.selector.replace( rselect, "" );
 				this.$img = $("<img>").attr({
 					alt: $link.attr("title"),
 					src: link.href,
 					width: options.imgWidth,
-					height: options.imgWeight
+					height: options.imgHeight
 				});
 				$target = $( options.skeleton ).attr( "id", id ).data( "_minGenerated", true )
 					.prepend( this.$img )
@@ -110,9 +110,12 @@
 			if ( !$target.length ) {
 				$.error( "minLight - specified container is not on the page: " + target );
 			}
+			// Create a mask if it does not exist
 			this.$mask = $target.prev(".lightbox-mask");
 			if ( !this.$mask.length ) {
-				this.$mask = $("<div class="lightbox-mask"></div>").insertBefore( target ).addClass( options.maskClass );
+				this.$mask = $("<div class='lightbox-mask'></div>")
+					.addClass( options.maskClass )
+					.insertBefore( $target );
 				if ( options.expandMask ) {
 					this._expandMask();
 				}
@@ -139,13 +142,7 @@
 				easing = options.easing;
 
 			this.$mask.stop( true, true ).fadeIn( fadeTime, easing );
-			this.$target.stop( true, true ).fadeIn( fadeTime, easing );
-
-			if ( $.isFunction(options.onOpen) ) {
-				// Called in the lightbox context
-				// Passes the $target
-				options.onOpen.call( this, this.$target );
-			}
+			this.$target.stop( true, true ).fadeIn( fadeTime, easing, options.onOpen );
 		},
 
 		/**
@@ -157,13 +154,7 @@
 				easing = options.easing;
 
 			this.$mask.stop( true, true ).fadeOut( fadeTime, easing );
-			this.$target.stop( true, true ).fadeOut( fadeTime, easing );
-
-			if ( $.isFunction(options.onClose) ) {
-				// Called in the lightbox context
-				// Passes the $target
-				options.onClose.call( this, this.$target );
-			}
+			this.$target.stop( true, true ).fadeOut( fadeTime, easing, options.onClose );
 		},
 
 		/**
@@ -344,4 +335,6 @@
 			}
 		});
 	};
+
+	return Lightbox;
 }));
