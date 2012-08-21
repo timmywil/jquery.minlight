@@ -20,7 +20,8 @@
 
 	var // Used to construct an id for the target using
 		// the data-target selector (even if it's not an id)
-		rselect = /[\#\.\s\,]/g,
+		// Just include alpha characters
+		rselect = /[^A-Za-z]/g,
 
 		// Used to convert camelCase to dashed
 		rupper = /([a-z]+)([A-Z])/g,
