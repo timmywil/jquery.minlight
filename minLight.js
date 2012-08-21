@@ -33,16 +33,16 @@
 
 	/**
 	 * @constructor
-	 * @param {!Object} $link - jQuery object of the current anchor
+	 * @param {Element} elem - Element in charge of opening the lightbox with a click or focus
 	 * @param {Object} options - An object literal containing options to override default options
 	 */
-	Lightbox = function( link, options ) {
-		this.link = link;
-		var $link = this.$link = $(link);
+	Lightbox = function( elem, options ) {
+		this.elem = elem;
+		var $elem = this.$elem = $(elem);
 
-		// Extend options with any data-* attributes present on the link
+		// Extend options with any data-* attributes present on the elem
 		$.each( options, function( key ) {
-			var opt = $link.attr( "data-" + key.replace(rupper, fdashed) );
+			var opt = $elem.attr( "data-" + key.replace(rupper, fdashed) );
 			if ( opt !== undefined ) {
 				options[ key ] = opt;
 			}
@@ -50,19 +50,25 @@
 		this.options = options;
 		this._setTarget( options.target );
 		this.bind();
+		this.opened = false;
 	};
 
 	// All options can be overridden by passing an object literal like any other plugin
-	//   OR with data-* attributes on the link (which can be very useful when calling minLight on more than one link at a time)
+	//   OR with data-* attributes on the element (which can be very useful when calling minLight on more than one element at a time)
 	// e.g. <a href="something.jpg" title="alt text" data-fade-time="300" data-img-width="750" data-container="#main" data-target="#awesome-lightbox">Click here</a>
 	//
 	// Order of precendence: data-* attributes > options passed on creation > defaults
 	Lightbox.defaults = {
-		fadeTime: "slow",
+		fadeTime: "fast",
 		easing: "swing",
 		container: "body",
+		// The actual lightbox the element should correspond to
+		// If one already exists hidden on the page,
+		// add its selector here
 		target: "",
 		maskClass: "",
+		// Image href (usually assigned from the anchor's href)
+		href: "",
 		imgWidth: "auto",
 		imgHeight: "auto",
 		// Close the lightbox when the mask is clicked
@@ -76,7 +82,8 @@
 			"<div class='lightbox'>" +
 				"<a href='#' class='lightbox-close ir'>X</a>" +
 			"</div>"
-		// onOpen, onClose ( cannot be extended with data-*, so do not include them in defaults )
+		// onOpen, onClose cannot be extended with data-*, so they are included in defaults
+		// they can be passed on creation or changed with the `option` method
 	};
 
 	Lightbox.prototype = {
@@ -88,8 +95,8 @@
 		 */
 		_setTarget: function( target ) {
 			var id,
-				link = this.link,
-				$link = this.$link,
+				elem = this.elem,
+				$elem = this.$elem,
 				options = this.options,
 				$target = $( target );
 
@@ -97,14 +104,17 @@
 				// Create a new target if they do not exist on the page
 				id = $target.selector.replace( rselect, "" );
 				this.$img = $("<img>").attr({
-					alt: $link.attr("title"),
-					src: link.href,
+					alt: $elem.attr("title"),
+					src: options.href || elem.href,
 					width: options.imgWidth,
 					height: options.imgHeight
 				});
-				$target = $( options.skeleton ).attr( "id", id ).data( "_minGenerated", true )
+				$target = $( options.skeleton ).data( "_minGenerated", true )
 					.prepend( this.$img )
 					.appendTo( options.container );
+				if ( id ) {
+					$target.attr( "id", id );
+				}
 			} else {
 				$target.data( "_minNumAttached", ($target.data("_minNumAttached") || 0) + 1 );
 			}
@@ -137,44 +147,80 @@
 		/**
 		 * Opens the lightbox
 		 */
-		open: function() {
+		open: function( fn ) {
+			if ( this.opened ) {
+				return;
+			}
 			var options = this.options,
 				fadeTime = options.fadeTime,
 				easing = options.easing;
 
+			this.opened = true;
 			this.$mask.stop( true, true ).fadeIn( fadeTime, easing );
-			this.$target.stop( true, true ).fadeIn( fadeTime, easing, options.onOpen );
+			this.$target.stop( true, true ).fadeIn( fadeTime, easing, function() {
+				if ( $.isFunction(fn) ) {
+					fn.call( this );
+				}
+				if ( $.isFunction(options.onOpen) ) {
+					options.onOpen.call( this );
+				}
+			});
 		},
 
 		/**
 		 * Close the lightbox
 		 */
-		close: function() {
+		close: function( fn ) {
+			if ( !this.opened ) {
+				return;
+			}
 			var options = this.options,
 				fadeTime = options.fadeTime,
 				easing = options.easing;
 
+			this.opened = false;
 			this.$mask.stop( true, true ).fadeOut( fadeTime, easing );
-			this.$target.stop( true, true ).fadeOut( fadeTime, easing, options.onClose );
+			this.$target.stop( true, true ).fadeOut( fadeTime, easing, function() {
+				if ( $.isFunction(fn) ) {
+					fn.call( this );
+				}
+				if ( $.isFunction(options.onClose) ) {
+					options.onClose.call( this );
+				}
+			});
 		},
 
 		/**
-		 * Bind all minimal Lightbox clicks (toggling link, close button, mask)
+		 * Bind all minimal Lightbox clicks (toggling elem, close button, mask)
 		 */
 		bind: function() {
-			var $closers = this.$close,
+			var $elem = this.$elem,
+				$closers = this.$close,
 				self = this;
 
-			// Toggle showing the lightbox on the main link
-			this.$link
-				.bind("click.minlight", function( e ) {
+			// Use click for links
+			if ( $.nodeName($elem[0], "a") ) {
+				$elem.on("click.minlight", function( e ) {
 					e.preventDefault();
+					// Toggle on click, if possible
 					if ( self.$target.css("display") !== "none" ) {
 						self.close();
 					} else {
 						self.open();
 					}
 				});
+
+			// Use focus if focusable
+			// jQuery checks focusable internally when retrieving tabIndex
+			} else if ( $elem.prop("tabIndex") !== undefined ) {
+				$elem.on("focus.minlight", function() {
+					self.open(function() {
+						$elem.blur();
+					});
+				});
+			} else {
+				$.error( "minLight - element is not clickable or focusable: " + $elem[0].nodeName );
+			}
 
 			// Bind any close links
 			if ( this.options.closeOnMaskClick ) {
@@ -190,7 +236,7 @@
 		 * Unbind all minimal lightbox clicks
 		 */
 		unbind: function() {
-			this.$link
+			this.$elem
 				.add( this.$mask )
 				.add( this.$close ).unbind(".minlight");
 		},
@@ -223,7 +269,7 @@
 		destroy: function() {
 			this.unbind();
 			this._removeTarget();
-			this.$link.removeData("_minLight");
+			this.$elem.removeData("_minLight");
 		},
 
 		/**
@@ -249,7 +295,7 @@
 					case "imgWidth":
 					case "imgHeight":
 						// Keep data-* attribute precedence
-						if ( self.$img && self.$link.attr("data-" + key) === undefined ) {
+						if ( self.$img && self.$elem.attr("data-" + key) === undefined ) {
 							self.$img[ key.replace("img", "").toLowerCase() ]( value );
 						}
 				}

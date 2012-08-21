@@ -29,14 +29,16 @@ e.g.
 __Order of precendence: data-* attributes > options passed on creation > defaults__
 
 	Lightbox.defaults = {
-		fadeTime: "slow",
+		fadeTime: "fast",
 		easing: "swing",
 		container: "body",
-		// The actual lightbox the link should correspond to
+		// The actual lightbox the element should correspond to
 		// If one already exists hidden on the page,
-		// add it here
+		// add its selector here
 		target: "",
 		maskClass: "",
+		// Image href (usually assigned from the anchor's href)
+		href: "",
 		imgWidth: "auto",
 		imgHeight: "auto",
 		// Close the lightbox when the mask is clicked
@@ -48,9 +50,9 @@ __Order of precendence: data-* attributes > options passed on creation > default
 		// Don"t use a data-* attribute to set this (that's just ugly)
 		skeleton: "" +
 			"<div class='lightbox'>" +
-				"<a href='#' class='lightbox-close ir'>Close</a>" +
+				"<a href='#' class='lightbox-close ir'>X</a>" +
 			"</div>"
-		// onOpen, onClose ( cannot be extended with data-*, so they are included in defaults )
+		// onOpen, onClose cannot be extended with data-*, so they are included in defaults
 		// they can be passed on creation or changed with the `option` method
 	};
 
