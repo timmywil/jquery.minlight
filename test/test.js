@@ -10,8 +10,7 @@ test("Basic requirements", 7, function() {
 });
 
 test("Usage", 14, function() {
-	var $minLink = $(".minlight-link");
-		$min = $minLink.minLight(),
+	var $min = $(".minlight-link").minLight(),
 		instance = $min.minLight("instance"),
 		$target = instance.$target;
 
@@ -74,6 +73,27 @@ test("Usage", 14, function() {
 
 	stop();
 	$min.minLight("open").minLight("close");
+});
+
+test("Input", 4, function() {
+	var $minInput = $("#minlight-input").minLight({
+			href: "frame.jpg",
+			container: "#main",
+			fadeTime: 50,
+			onOpen: function() {
+				equal( this.parentNode.id, "main", "Custom container and onOpen set on focus" );
+				start();
+			}
+		}),
+		instance = $minInput.minLight("instance"),
+		$target = instance.$target;
+
+	ok( instance, "Instance created from input" );
+	equal( $target[0].parentNode.id, "main", "Target added to custom container" );
+	equal( $target.find("img").attr("src"), "frame.jpg", "href option set correctly" );
+
+	stop();
+	$minInput.focus();
 });
 
 test("No conflict", 1, function() {

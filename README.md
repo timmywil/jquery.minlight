@@ -5,7 +5,8 @@ minLight is meant to create the most common, simple lightboxes that use a custom
 
 ## Usage
 
-	$(".minlight-links").minLight({
+	// Will bind to click
+	$("a.minlight-links").minLight({
 		container: "#main",
 		onOpen: function() {
 			// context is the lightbox the link has opened
@@ -13,13 +14,17 @@ minLight is meant to create the most common, simple lightboxes that use a custom
 		}
 	});
 
+	// Will bind to focus
+	$("input.minlight-input").minLight({
+		href: "awesome.jpg"
+	});
 
 ## Options
 
 All options can be overridden by passing an object literal like any other plugin,<br>
 with the `"option"` method,<br>
-OR with data-* attributes on the link,<br>
-which can be very useful when calling minLight on more than one link at a time.
+OR with data-* attributes on the element,<br>
+which can be very useful when calling minLight on more than one element at a time.
 
 e.g.
 
@@ -62,37 +67,37 @@ Methods can be called in the same way as a widget from the UI widget factory. Pa
 
 ### `open`
 
-	$link.minLight("open");
+	$elem.minLight("open");
 
 Open the lightbox
 
 ### `close`
 
-	$link.minLight("close");
+	$elem.minLight("close");
 
 Close the lightbox
 
 ### `destroy`
 
-	$link.minLight("destroy");
+	$elem.minLight("destroy");
 
 Unbinds all events and removes all data, including the minLight instance on the element.
 
 ### `instance`
 
-	var minInstance = $link.minLight("instance");
+	var minInstance = $elem.minLight("instance");
 
 Retreives the minLight instance(s) from the set. If there are multiple, you will get an array of instances. If there is only one, you will just get the instance of minLight.
 
 ### `option`
 
 	// One at a time
-	$link.minLight("option", "onOpen", function() {
+	$elem.minLight("option", "onOpen", function() {
 		// Replace the onOpen callback
 	});
 
 	// Several options at once
-	$link.minLight("option", {
+	$elem.minLight("option", {
 		fadeTime: "fast",
 		container: "#main",
 		maskClass: "super-mask"
