@@ -3,7 +3,25 @@
 minLight is meant to create the most common, simple lightboxes that use a customizable fading animation.
 
 
-## Usage
+
+
+## Loading minLight
+minLight can obviously be included in your js at the end of the body, but minLight also supports AMD for javascript module love.
+
+With script tags:
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+	<script src="/js/minLight.js"></script>
+
+With AMD loader in an anonymous module:
+
+	define([ "jquery-plugins/minLight" ], function() {
+		$(function() {
+			$(".minlight-links").minLight();
+		});
+	});
+
+## Initialization
 
 	// Will bind to click
 	$("a.minlight-links").minLight({
