@@ -1,12 +1,12 @@
 # jQuery minLight lightbox plugin
 
-minLight is meant to create the most common, simple lightboxes that use a customizable fading animation.
+minLight is meant to create the most common, simple lightboxes that use a customizable fading animation. It is also perfectly suited for mobile jQuery projects.
 
-
+minLight.min.js (4kb), included in this repo, is compressed with [uglifyjs](https://github.com/mishoo/UglifyJS).
 
 
 ## Loading minLight
-minLight can obviously be included in your js at the end of the body, but minLight also supports AMD for javascript module love.
+minLight can obviously be included with your scripts at the end of the body, but minLight supports AMD for javascript module love.
 
 With script tags:
 
@@ -15,7 +15,7 @@ With script tags:
 
 With AMD loader in an anonymous module:
 
-	define([ "jquery-plugins/minLight" ], function() {
+	define([ "jquery", "jquery-plugins/minLight" ], function( $ ) {
 		$(function() {
 			$(".minlight-links").minLight();
 		});
