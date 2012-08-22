@@ -1,5 +1,5 @@
 /**
- * @license minLight.js
+ * @license minLight.js v0.1.0
  * A minimal lightbox that fades in/out a specified target
  *   and builds a target with an image only if it is not already on the page
  * Copyright (c) 2012 timmy willison
