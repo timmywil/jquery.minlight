@@ -75,7 +75,7 @@ __Order of precendence: data-* attributes > options passed on creation > default
 			"<div class='lightbox'>" +
 				"<a href='#' class='lightbox-close ir'>X</a>" +
 			"</div>"
-		// onOpen, onClose cannot be extended with data-*, so they are included in defaults
+		// onOpen, onClose cannot be extended with data-*, so they are not included in defaults
 		// they can be passed on creation or changed with the `option` method
 	};
 
