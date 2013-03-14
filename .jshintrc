@@ -1,0 +1,37 @@
+{
+  "boss": true,
+  "browser": true,
+  "curly": true,
+  "eqeqeq": true,
+  "eqnull": true,
+  "es5": true,
+  "evil": true,
+  "expr": true,
+  "jquery": true,
+  "maxerr": 100,
+  "newcap": true,
+  "noarg": true,
+  "node": true,
+  "quotmark": "double",
+  "smarttabs": true,
+  "strict": false,
+  "trailing": true,
+  "undef": true,
+  "wsh": true,
+
+  "globals": {
+    "define": true,
+    "require": true,
+    "module": true,
+    "exports": true,
+    "Modernizr": true,
+    "process": true,
+    "__dirname": true,
+    "console": true,
+    "test": true,
+    "ok": true,
+    "start": true,
+    "stop": true,
+    "equal": true
+  }
+}

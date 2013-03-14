@@ -9,49 +9,18 @@ test("Basic requirements", 7, function() {
 	ok( $, "$" );
 });
 
-test("Usage", 14, function() {
+test("Usage", 12, function() {
 	var $min = $(".minlight-link").minLight(),
 		instance = $min.minLight("instance"),
 		$target = instance.$target;
 
 	ok( $min.length, "minLink is present" );
-	ok( $min.data("_minLight"), "minLight instance added as data" );
+	ok( $min.data("__minlight"), "minLight instance added as data" );
 	ok( $target[0].parentNode, "Target added" );
 	ok( instance.$mask[0].parentNode, "Mask added" );
 
 	$min.minLight("destroy");
-	ok( !$min.data("_minLight"), "Method: destroy (data)" );
-	ok( !$target[0].parentNode, "Method: destroy (target removed)" );
-
-	$min.minLight({
-		container: "#qunit-fixture",
-		fadeTime: 50,
-		onOpen: function() {
-			equal( $(this).css("display"), "block", "Method: open (check display)" );
-			start();
-		},
-		onClose: function() {
-			equal( $(this).css("display"), "none", "Method: close (check display)" );
-			start();
-		}
-	});
-
-	stop( 2 );
-	$min.minLight("open").minLight("close");
-
-	$min.minLight("option", "onOpen", function() {
-		ok( true, "onOpen option changed");
-		start();
-		start();
-	});
-
-	// Using two instead of one here
-	// Will hang if the option was not changed
-	stop( 2 );
-	$min.minLight("open");
-
-	$min.minLight("destroy");
-	ok( !$min.data("_minLight"), "Method: destroy (data)" );
+	ok( !$min.data("__minlight"), "Method: destroy (data)" );
 	ok( !$target[0].parentNode, "Method: destroy (target removed)" );
 
 	$min.minLight({
@@ -63,16 +32,27 @@ test("Usage", 14, function() {
 	equal( $target[0].id, "awesome-lightbox", "target is awesome-lightbox" );
 	ok( instance.$mask[0].parentNode, "Mask present" );
 
-	$min.minLight("option", {
+	$min.minLight("destroy");
+	ok( !$min.data("__minlight"), "Method: destroy (data)" );
+	ok( $target[0].parentNode, "Method: destroy (target not removed, it existed before)" );
+
+	$min.minLight({
+		container: "#qunit-fixture",
 		fadeTime: 50,
+		onOpen: function( min ) {
+			var $this = $(this);
+			equal( $this.css("display"), "block", "Method: open (check display)" );
+			min.close();
+			start();
+		},
 		onClose: function() {
-			equal( $(this).css("display"), "none", "Method: close (on user target)" );
+			equal( $(this).css("display"), "none", "Method: close (check display)" );
 			start();
 		}
 	});
 
-	stop();
-	$min.minLight("open").minLight("close");
+	stop( 2 );
+	$min.minLight("open");
 });
 
 test("Input", 4, function() {
@@ -98,7 +78,7 @@ test("Input", 4, function() {
 
 test("No conflict", 1, function() {
 	var j = jQuery.noConflict( true );
-	ok( j(".minlight-link").minLight().data("_minLight"), "minLight works in noConflict" );
+	ok( j(".minlight-link").minLight().data("__minlight"), "minLight works in noConflict" );
 	// Restore
-	$ = jQuery = j;
+	window.$ = window.jQuery = j;
 });

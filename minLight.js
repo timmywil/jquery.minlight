@@ -1,10 +1,9 @@
 /**
- * @license minLight.js v0.1.0
+ * @license minLight.js v0.2.0
  * A minimal lightbox that fades in/out a specified target
- *   and builds a target with an image only if it is not already on the page
- * Copyright (c) 2012 timmy willison
- * Dual licensed under the MIT and GPL licenses.
- * http://timmywillison.com/licence/
+ * Copyright (c) 2013 timmy willison
+ * Released under the MIT license
+ * https://github.com/timmywil/jquery-minlight/blob/master/MIT-LICENSE.txt
  */
 
 (function( factory ) {
@@ -18,10 +17,11 @@
 }(function( $ ) {
 	"use strict";
 
-	var // Used to construct an id for the target using
+	var
+		datakey = "__minlight",
+		// Used to construct an id for the target using
 		// the data-target selector (even if it's not an id)
-		// Just include alpha characters
-		rselect = /[^A-Za-z]/g,
+		rselect = /[^A-Za-z\-\d]|(?:^\d)/g,
 
 		// Used to convert camelCase to dashed
 		rupper = /([a-z]+)([A-Z])/g,
@@ -37,8 +37,23 @@
 	 * @param {Object} options - An object literal containing options to override default options
 	 */
 	Lightbox = function( elem, options ) {
+
+		// Don't remake
+		var d = $.data( elem, datakey );
+		if ( d ) {
+			return d;
+		}
+
+		// Allow instantiation without `new` keyword
+		if ( !(this instanceof Lightbox) ) {
+			return new Lightbox( elem, options );
+		}
+
 		this.elem = elem;
 		var $elem = this.$elem = $(elem);
+
+		// Extend default options
+		options = $.extend( {}, Lightbox.defaults, options );
 
 		// Extend options with any data-* attributes present on the elem
 		$.each( options, function( key ) {
@@ -47,10 +62,13 @@
 				options[ key ] = opt;
 			}
 		});
+
+		this.content = options.content;
 		this.options = options;
 		this._setTarget( options.target );
 		this.bind();
 		this.opened = false;
+		$.data( elem, datakey, this );
 	};
 
 	// All options can be overridden by passing an object literal like any other plugin
@@ -66,7 +84,9 @@
 		// If one already exists hidden on the page,
 		// add its selector here
 		target: "",
-		maskClass: "",
+		// Classes for the lightbox
+		lightboxClass: "lightbox",
+		maskClass: "lightbox-mask",
 		// Image href (usually assigned from the anchor's href)
 		href: "",
 		imgWidth: "auto",
@@ -78,15 +98,13 @@
 		expandMask: true,
 		// The basic skeleton for a lightbox
 		// Don"t use a data-* attribute to set this (that's just ugly)
-		skeleton: "" +
-			"<div class='lightbox'>" +
-				"<a href='#' class='lightbox-close ir'>X</a>" +
-			"</div>"
-		// onOpen, onClose cannot be extended with data-*, so they are not included in defaults
+		skeleton: "<div><a href='#' class='lightbox-close' data-bypass>X</a></div>"
+		// onOpen, onClose cannot be extended with data-*, so they are included in defaults
 		// they can be passed on creation or changed with the `option` method
 	};
 
 	Lightbox.prototype = {
+		constructor: Lightbox,
 
 		/**
 		 * Sets the lightbox target; creates a lightbox with an image if one does not exist
@@ -101,35 +119,47 @@
 				$target = $( target );
 
 			if ( !$target.length ) {
-				// Create a new target if they do not exist on the page
-				id = $target.selector.replace( rselect, "" );
-				this.$img = $("<img>").attr({
-					alt: $elem.attr("title"),
-					src: options.href || elem.href,
-					width: options.imgWidth,
-					height: options.imgHeight
-				});
-				$target = $( options.skeleton ).data( "_minGenerated", true )
-					.prepend( this.$img )
-					.appendTo( options.container );
-				if ( id ) {
-					$target.attr( "id", id );
+				// If this is an anchor or is focusable like an input,
+				// create an automated target
+				if ( $.nodeName( elem, "a" ) || $elem.prop("tabIndex") !== undefined ) {
+					// Create a new target if they do not exist on the page
+					if ( !this.content ) {
+						this.content = this.$img = $("<img>").attr({
+							alt: $elem.attr("title"),
+							src: options.href || elem.href,
+							width: options.imgWidth,
+							height: options.imgHeight
+						});
+					}
+
+					$target = $( options.skeleton ).data( "_minGenerated", true )
+						.prepend( this.content )
+						.appendTo( options.container );
+
+					// Add an ID if none is present
+					id = (target || $target.selector).replace( rselect, "" );
+					if ( id ) {
+						$target.attr( "id", id );
+					}
+				} else {
+					$target = $elem;
 				}
-			} else {
-				$target.data( "_minNumAttached", ($target.data("_minNumAttached") || 0) + 1 );
 			}
+
 			if ( !$target.length ) {
 				$.error( "minLight - specified container is not on the page: " + target );
 			}
+
+			$target
+				.addClass( options.lightboxClass )
+				.data( "_minNumAttached", ($target.data("_minNumAttached") || 0) + 1 );
+
 			// Create a mask if it does not exist
-			this.$mask = $target.prev(".lightbox-mask");
+			this.$mask = $target.prev("." + options.maskClass.split(" ")[0] );
 			if ( !this.$mask.length ) {
-				this.$mask = $("<div class='lightbox-mask'></div>")
+				this.$mask = $("<div>")
 					.addClass( options.maskClass )
 					.insertBefore( $target );
-				if ( options.expandMask ) {
-					this._expandMask();
-				}
 			}
 			this.$target = $target;
 			this.$close = $target.find(".lightbox-close");
@@ -151,18 +181,32 @@
 			if ( this.opened ) {
 				return;
 			}
-			var options = this.options,
+			var self = this,
+				options = this.options,
 				fadeTime = options.fadeTime,
-				easing = options.easing;
+				easing = options.easing,
+				$target = this.$target,
+				mL = $target.width() / 2 * -1;
 
-			this.opened = true;
-			this.$mask.stop( true, true ).fadeIn( fadeTime, easing );
-			this.$target.stop( true, true ).fadeIn( fadeTime, easing, function() {
+			// willOpen callback
+			if ( $.isFunction(options.willOpen) ) {
+				options.willOpen.call( this.$target[0], this );
+			}
+
+			// Fade in mask
+			if ( options.expandMask ) {
+				this._expandMask();
+			}
+			this.$mask.stop().fadeIn( fadeTime, easing );
+			// Center and fade in target
+			$target.css( "marginLeft", mL )
+			.stop().fadeIn( fadeTime, easing, function() {
+				self.opened = true;
 				if ( $.isFunction(fn) ) {
-					fn.call( this );
+					fn.call( this, self );
 				}
 				if ( $.isFunction(options.onOpen) ) {
-					options.onOpen.call( this );
+					options.onOpen.call( this, self );
 				}
 			});
 		},
@@ -174,40 +218,55 @@
 			if ( !this.opened ) {
 				return;
 			}
-			var options = this.options,
+			var self = this,
+				options = this.options,
 				fadeTime = options.fadeTime,
 				easing = options.easing;
 
+			// willClose
+			if ( $.isFunction(options.willClose) ) {
+				options.willClose.call( this.$target[0], this );
+			}
+
 			this.opened = false;
-			this.$mask.stop( true, true ).fadeOut( fadeTime, easing );
-			this.$target.stop( true, true ).fadeOut( fadeTime, easing, function() {
+			this.$mask.stop().fadeOut( fadeTime, easing );
+			this.$target.stop().fadeOut( fadeTime, easing, function() {
 				if ( $.isFunction(fn) ) {
-					fn.call( this );
+					fn.call( this, self );
 				}
 				if ( $.isFunction(options.onClose) ) {
-					options.onClose.call( this );
+					options.onClose.call( this, self );
 				}
 			});
+		},
+
+		/**
+		 * Toggle the lightbox depending on css display
+		 * @param {Function} fn Callback to be called on open/close completion
+		 */
+		toggle: function( fn ) {
+			// Toggle on click, if possible
+			if ( this.$target.css("display") === "none" ) {
+				this.open( fn );
+			} else {
+				this.close( fn );
+			}
 		},
 
 		/**
 		 * Bind all minimal Lightbox clicks (toggling elem, close button, mask)
 		 */
 		bind: function() {
-			var $elem = this.$elem,
+			var elem = this.elem,
+				$elem = this.$elem,
 				$closers = this.$close,
 				self = this;
 
 			// Use click for links
-			if ( $.nodeName($elem[0], "a") ) {
+			if ( $.nodeName(elem, "a") || $.nodeName(elem, "button") ) {
 				$elem.on("click.minlight", function( e ) {
 					e.preventDefault();
-					// Toggle on click, if possible
-					if ( self.$target.css("display") !== "none" ) {
-						self.close();
-					} else {
-						self.open();
-					}
+					self.toggle();
 				});
 
 			// Use focus if focusable
@@ -218,8 +277,6 @@
 						$elem.blur();
 					});
 				});
-			} else {
-				$.error( "minLight - element is not clickable or focusable: " + $elem[0].nodeName );
 			}
 
 			// Bind any close links
@@ -251,7 +308,7 @@
 				isGenerated = $target.data("_minGenerated");
 
 			if ( !numTargets || numTargets <= 1 ) {
-				// Only remove the target if it was generated
+				// Only remove the target if it was generated by minLight
 				if ( isGenerated ) {
 					$target.remove();
 				}
@@ -269,7 +326,7 @@
 		destroy: function() {
 			this.unbind();
 			this._removeTarget();
-			this.$elem.removeData("_minLight");
+			this.$elem.removeData( datakey );
 		},
 
 		/**
@@ -312,7 +369,7 @@
 
 		/**
 		 * Get/set option on an existing minLight instance
-		 * @return {Array|undefined} If getting, returns an array of all values
+		 * @returns {Array|undefined} If getting, returns an array of all values
 		 *   on each minLight for a given key. If setting, continue chaining.
 		 */
 		option: function( key, value ) {
@@ -336,7 +393,7 @@
 		},
 
 		/**
-		 * @return {Object} The minLight instance
+		 * @returns {Object} The minLight instance
 		 */
 		instance: function() {
 			return this;
@@ -346,19 +403,25 @@
 	/**
 	 * Extend jQuery
 	 * @param {Object|String} options - The name of a method to call on the minLight prototype or an object literal of options
-	 * @return {jQuery|Object} jQuery instance for regular chaining or the return value of a minLight method call
+	 * @returns {jQuery|Object} jQuery instance for regular chaining or the return value of a minLight method call
 	 */
 	$.fn.minLight = function( options ) {
-		var instance, args, m,
-			ret = [];
+		var instance, args, m, ret;
 
 		// Call methods widget-style
 		if ( typeof options === "string" ) {
+			ret = [];
 			args = slice.call( arguments, 1 );
 			this.each(function() {
-				instance = $.data( this, "_minLight" );
+				instance = $.data( this, datakey );
 
-				if ( instance && options.charAt(0) !== "_" && typeof (m = instance[ options ]) === "function" &&
+				if ( !instance ) {
+					ret.push( undefined );
+
+				// Ignore private methods beginning with `_`
+				} else if ( options.charAt(0) !== "_" &&
+					typeof (m = instance[ options ]) === "function" &&
+					// If nothing is returned, do not add to return values
 					(m = m.apply( instance, args )) !== undefined ) {
 
 					ret.push( m );
@@ -367,20 +430,13 @@
 
 			// Return an array of values for the jQuery instances
 			// Or the value itself if there is only one
+			// Or keep chaining
 			return ret.length ?
 				(ret.length === 1 ? ret[0] : ret) :
 				this;
 		}
 
-		// Extend default with given object literal
-		options = $.extend( {}, Lightbox.defaults, options );
-
-		return this.each(function() {
-			// Attach the new minLight instance to the element
-			if ( !$.data(this, "_minLight") ) {
-				$.data( this, "_minLight", new Lightbox(this, options) );
-			}
-		});
+		return this.each(function() { new Lightbox( this, options ); });
 	};
 
 	return Lightbox;
