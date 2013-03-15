@@ -18,9 +18,6 @@
 	"use strict";
 
 	var datakey = "__minlight",
-		// Used to construct an id for the target using
-		// the data-target selector (even if it's not an id)
-		rselect = /[^A-Za-z\-\d]|(?:^\d)/g,
 
 		// Used to convert camelCase to dashed
 		rupper = /([A-Z])/g,
@@ -283,7 +280,6 @@
 						break;
 					case "target":
 						self._removeTarget();
-						self._setTarget( value );
 						break;
 					case "imgWidth":
 					case "imgHeight":
@@ -299,6 +295,9 @@
 						// Rebind so the fadeTime and easing don't need retrieving on every click
 						self.unbind();
 						self.bind();
+						break;
+					case "target":
+						self._setTarget();
 				}
 			});
 		},
@@ -307,12 +306,11 @@
 		 * Sets the lightbox target; creates a lightbox with an image if one does not exist
 		 */
 		_setTarget: function() {
-			var id,
-				elem = this.elem,
-				$elem = this.$elem,
-				options = this.options,
-				target = options.target,
-				$target = $( target );
+			var elem = this.elem;
+			var $elem = this.$elem;
+			var options = this.options;
+			var target = options.target;
+			var $target = $( target );
 
 			if ( !$target.length ) {
 				// If this is an anchor or is focusable like an input,
@@ -332,11 +330,6 @@
 						.prepend( this.content )
 						.appendTo( options.container );
 
-					// Add an ID if none is present
-					id = (target || $target.selector).replace( rselect, "" );
-					if ( id ) {
-						$target.attr( "id", id );
-					}
 				} else {
 					$target = $elem;
 				}
