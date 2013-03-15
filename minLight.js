@@ -74,7 +74,7 @@
 		container: "body",
 		// The actual lightbox the element should correspond to
 		// If one already exists hidden on the page,
-		// add its selector here
+		// add its ID selector here
 		target: "",
 		// Classes for the lightbox
 		lightboxClass: "lightbox",
@@ -329,6 +329,8 @@
 					$target = $( options.skeleton ).data( "_minGenerated", true )
 						.prepend( this.content )
 						.appendTo( options.container );
+
+					$target.attr( "id", target.replace("#", "") );
 
 				} else {
 					$target = $elem;
