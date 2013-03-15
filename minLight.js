@@ -1,5 +1,5 @@
 /**
- * @license minLight.js @VERSION
+ * @license minLight.js v@VERSION
  * @DATE
  * A minimal lightbox that fades in/out a specified target
  * Copyright (c) 2013 timmy willison

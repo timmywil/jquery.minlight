@@ -14,8 +14,8 @@ module.exports = function( grunt ) {
 		},
 		compare_size: {
 			files: [
-				"minLight.js",
-				"minLight.min.js"
+				"dist/minLight.js",
+				"dist/minLight.min.js"
 			]
 		},
 		jshint: {
