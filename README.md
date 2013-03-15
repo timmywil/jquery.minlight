@@ -2,7 +2,7 @@
 
 minLight is meant to create the most common, simple lightboxes that use a customizable fading animation. It is also perfectly suited for mobile jQuery projects.
 
-minLight.min.js (4kb), included in this repo, is compressed with [uglifyjs](https://github.com/mishoo/UglifyJS).
+minLight.min.js (4.3kb/1.8kb gzip), included in this repo, is compressed with [uglifyjs](https://github.com/mishoo/UglifyJS).
 
 
 ## Loading minLight

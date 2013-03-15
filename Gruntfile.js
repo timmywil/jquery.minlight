@@ -5,6 +5,12 @@
 module.exports = function( grunt ) {
 
 	grunt.initConfig({
+		compare_size: {
+			files: [
+				"minLight.js",
+				"minLight.min.js"
+			]
+		},
 		jshint: {
 			all: [
 				"Gruntfile.js",
@@ -39,12 +45,13 @@ module.exports = function( grunt ) {
 	});
 
 	// Load necessary tasks from NPM packages
+	grunt.loadNpmTasks("grunt-compare-size");
 	grunt.loadNpmTasks("grunt-contrib-jshint");
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-contrib-qunit");
 	grunt.loadNpmTasks("grunt-contrib-watch");
 
-	grunt.registerTask( "test", [ "jshint", "uglify", "qunit" ]);
+	grunt.registerTask( "test", [ "jshint", "uglify", "qunit", "compare_size" ]);
 
 	// Default grunt
 	grunt.registerTask( "default", [ "test" ]);
