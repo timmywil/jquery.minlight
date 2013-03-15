@@ -5,6 +5,13 @@
 module.exports = function( grunt ) {
 
 	grunt.initConfig({
+		pkg: grunt.file.readJSON("package.json"),
+		build: {
+			all: {
+				dest: "dist/minLight.js",
+				src: "minLight.js"
+			}
+		},
 		compare_size: {
 			files: [
 				"minLight.js",
@@ -22,8 +29,8 @@ module.exports = function( grunt ) {
 			}
 		},
 		uglify: {
-			"minLight.min.js": [
-				"minLight.js"
+			"dist/minLight.min.js": [
+				"dist/minLight.js"
 			],
 			options: {
 				preserveComments: "some"
@@ -51,7 +58,34 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks("grunt-contrib-qunit");
 	grunt.loadNpmTasks("grunt-contrib-watch");
 
-	grunt.registerTask( "test", [ "jshint", "uglify", "qunit", "compare_size" ]);
+	grunt.registerMultiTask(
+		"build",
+		"Build minLight to the dist directory",
+		function() {
+			var data = this.data;
+			var dest = data.dest;
+			var src = data.src;
+			var version = grunt.config("pkg.version");
+			var compiled = grunt.file.read( src );
+
+			// Append commit id to version
+			if ( process.env.COMMIT ) {
+				version += " " + process.env.COMMIT;
+			}
+
+			// Replace version and date
+			compiled = compiled
+				.replace( /@VERSION/g, version )
+				.replace( "@DATE", new Date() );
+
+			// Write source to file
+			grunt.file.write( dest, compiled );
+
+			grunt.log.ok( "File written to " + dest );
+		}
+	);
+
+	grunt.registerTask( "test", [ "jshint", "build", "uglify", "qunit", "compare_size" ]);
 
 	// Default grunt
 	grunt.registerTask( "default", [ "test" ]);

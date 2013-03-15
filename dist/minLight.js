@@ -1,6 +1,6 @@
 /**
- * @license minLight.js @VERSION
- * @DATE
+ * @license minLight.js 0.2.1
+ * Fri Mar 15 2013 12:49:27 GMT-0400 (EDT)
  * A minimal lightbox that fades in/out a specified target
  * Copyright (c) 2013 timmy willison
  * Released under the MIT license
