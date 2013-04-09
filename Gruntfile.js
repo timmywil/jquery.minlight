@@ -4,6 +4,8 @@
 
 module.exports = function( grunt ) {
 
+	var gzip = require("gzip-js");
+
 	grunt.initConfig({
 		pkg: grunt.file.readJSON("package.json"),
 		build: {
@@ -16,7 +18,15 @@ module.exports = function( grunt ) {
 			files: [
 				"dist/minLight.js",
 				"dist/minLight.min.js"
-			]
+			],
+			options: {
+				compress: {
+					gz: function( contents ) {
+						return gzip.zip( contents, {} ).length;
+					}
+				},
+				cache: "dist/.sizecache.json"
+			}
 		},
 		jshint: {
 			all: [
@@ -37,7 +47,6 @@ module.exports = function( grunt ) {
 			}
 		},
 		qunit: {
-			// runs all html files in phantomjs
 			all: {
 				src: [ "test/index.html" ],
 			}
@@ -76,7 +85,7 @@ module.exports = function( grunt ) {
 			// Replace version and date
 			compiled = compiled
 				.replace( /@VERSION/g, version )
-				.replace( "@DATE", new Date() );
+				.replace( "@DATE", (new Date).toDateString() );
 
 			// Write source to file
 			grunt.file.write( dest, compiled );

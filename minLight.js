@@ -1,6 +1,6 @@
 /**
  * @license minLight.js v@VERSION
- * @DATE
+ * Updated: @DATE
  * A minimal lightbox that fades in/out a specified target
  * Copyright (c) 2013 timmy willison
  * Released under the MIT license
@@ -70,9 +70,15 @@
 	//
 	// Order of precendence: data-* attributes > options passed on creation > defaults
 	Lightbox.defaults = {
-		fadeTime: "fast",
+		// Animation time in ms
+		fadeTime: 200,
 		easing: "swing",
 		container: "body",
+		// Set this to true if you'd like to do your own css transition using your own styles
+		transition: false,
+		// Classes for doing your own transitions
+		openClass: "open",
+		closedClass: "closed",
 		// The actual lightbox the element should correspond to
 		// If one already exists hidden on the page,
 		// add its ID selector here
@@ -122,25 +128,39 @@
 
 			// willOpen callback
 			if ( $.isFunction(options.willOpen) ) {
-				options.willOpen.call( this.$target[0], this );
+				options.willOpen.call( $target[0], this );
 			}
 
 			// Fade in mask
 			if ( options.expandMask ) {
 				this._expandMask();
 			}
+			// Center
+			$target.css( "marginLeft", mL );
+
+			// Fade in mask
 			this.$mask.stop().fadeIn( fadeTime, easing );
-			// Center and fade in target
-			$target.css( "marginLeft", mL )
-			.stop().fadeIn( fadeTime, easing, function() {
+
+			/**
+			 * Called after the fadeIn or the transition completes
+			 */
+			function complete() {
 				self.opened = true;
 				if ( $.isFunction(fn) ) {
-					fn.call( this, self );
+					fn.call( $target[0], self );
 				}
 				if ( $.isFunction(options.onOpen) ) {
-					options.onOpen.call( this, self );
+					options.onOpen.call( $target[0], self );
 				}
-			});
+			}
+
+			// Transition or fade
+			if ( options.transition ) {
+				$target.removeClass( options.closedClass ).addClass( options.openClass );
+				setTimeout( complete, fadeTime );
+			} else {
+				$target.stop().fadeIn( fadeTime, easing, complete );
+			}
 		},
 
 		/**
@@ -153,23 +173,38 @@
 			var self = this,
 				options = this.options,
 				fadeTime = options.fadeTime,
-				easing = options.easing;
+				easing = options.easing,
+				$target = this.$target;
 
 			// willClose
 			if ( $.isFunction(options.willClose) ) {
-				options.willClose.call( this.$target[0], this );
+				options.willClose.call( $target[0], this );
 			}
 
 			this.opened = false;
+
+			// Fade out mask
 			this.$mask.stop().fadeOut( fadeTime, easing );
-			this.$target.stop().fadeOut( fadeTime, easing, function() {
+
+			/**
+			 * Called after the fadeOut or the transition completes
+			 */
+			function complete() {
 				if ( $.isFunction(fn) ) {
-					fn.call( this, self );
+					fn.call( $target[0], self );
 				}
 				if ( $.isFunction(options.onClose) ) {
-					options.onClose.call( this, self );
+					options.onClose.call( $target[0], self );
 				}
-			});
+			}
+
+			// Transition or fade
+			if ( options.transition ) {
+				$target.removeClass( options.openClass ).addClass( options.closedClass );
+				setTimeout( complete, fadeTime );
+			} else {
+				$target.stop().fadeOut( fadeTime, easing, complete );
+			}
 		},
 
 		/**
@@ -403,11 +438,8 @@
 			this.each(function() {
 				instance = $.data( this, datakey );
 
-				if ( !instance ) {
-					ret.push( undefined );
-
 				// Ignore methods beginning with `_`
-				} else if ( options.charAt(0) !== "_" &&
+				if ( instance && options.charAt(0) !== "_" &&
 					typeof (m = instance[ options ]) === "function" &&
 					// If nothing is returned, do not add to return values
 					(m = m.apply( instance, args )) !== undefined ) {

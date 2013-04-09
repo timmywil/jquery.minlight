@@ -43,7 +43,6 @@ test("Usage", 12, function() {
 			var $this = $(this);
 			equal( $this.css("display"), "block", "Method: open (check display)" );
 			min.close();
-			start();
 		},
 		onClose: function() {
 			equal( $(this).css("display"), "none", "Method: close (check display)" );
@@ -51,7 +50,7 @@ test("Usage", 12, function() {
 		}
 	});
 
-	stop( 2 );
+	stop();
 	$min.minLight("open");
 });
 
@@ -74,6 +73,26 @@ test("Input", 4, function() {
 
 	stop();
 	$minInput.focus();
+});
+
+test("Transition", 4, function() {
+	var $min = $(".minlight-link").minLight("destroy").minLight({
+		transition: true
+	});
+	ok( $min.minLight("option", "transition"), "Transition option set" );
+
+	stop();
+	var openClass = $min.minLight("option", "openClass");
+	var closedClass = $min.minLight("option", "closedClass");
+	var $target = $min.minLight("instance").$target;
+	$min.minLight("open", function() {
+		ok( $target.hasClass(openClass), "minLight applies openClass on open" );
+		$min.minLight("close", function() {
+			ok( $target.hasClass(closedClass), "minLight applies closeClass on close" );
+			ok( !$target.hasClass(openClass), "minLight removes openClass on close" );
+			start();
+		});
+	});
 });
 
 test("No conflict", 1, function() {
