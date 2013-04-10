@@ -4,7 +4,7 @@ minLight is meant to create the most common, simple lightboxes that use a custom
 
 By default, minLight will open/close lightboxes using a simple javascript fade. However, set the `transition` option to `true` and use your own custom css transitions using an `openClass` and a `closedClass`.
 
-minLight.min.js (4.3kb/1.8kb gzip), included in this repo, is compressed with [uglifyjs](https://github.com/mishoo/UglifyJS).
+minLight.min.js (4.8kb/1.9kb gzip), included in this repo, is compressed with [uglifyjs](https://github.com/mishoo/UglifyJS).
 
 
 ## Loading minLight
@@ -69,25 +69,27 @@ Lightbox.defaults = {
 	container: "body",
 	// Set this to true if you'd like to do your own css transition using your own styles
 	transition: false,
-	// Classes for doing your own transitions
-	openClass: "open",
-	closedClass: "closed",
-	// The actual lightbox the element should correspond to
-	// If one already exists hidden on the page,
-	// add its ID selector here
-	target: "",
 	// Classes for the lightbox
 	lightboxClass: "lightbox",
 	maskClass: "lightbox-mask",
-	// Image href (usually assigned from the anchor's href)
-	href: "",
-	imgWidth: "auto",
-	imgHeight: "auto",
+	// Classes for doing your own transitions
+	openClass: "lightbox-open",
+	closedClass: "lightbox-closed",
 	// Close the lightbox when the mask is clicked
 	closeOnMaskClick: true,
 	// Expand the mask to handle document height being larger than window height
 	// This is sometimes not ideal if the container is something other than the body
 	expandMask: true,
+	// Disable the mask
+	disableMask: false,
+	// The actual lightbox the element should correspond to
+	// If one already exists hidden on the page,
+	// add its ID selector here
+	target: "",
+	// Image href (usually assigned from the anchor's href)
+	href: "",
+	imgWidth: "auto",
+	imgHeight: "auto",
 	// The basic skeleton for a lightbox
 	// Don"t use a data-* attribute to set this (that's just ugly)
 	skeleton: "<div><a href='#' class='lightbox-close' data-bypass>X</a></div>"

@@ -76,25 +76,27 @@
 		container: "body",
 		// Set this to true if you'd like to do your own css transition using your own styles
 		transition: false,
-		// Classes for doing your own transitions
-		openClass: "open",
-		closedClass: "closed",
-		// The actual lightbox the element should correspond to
-		// If one already exists hidden on the page,
-		// add its ID selector here
-		target: "",
 		// Classes for the lightbox
 		lightboxClass: "lightbox",
 		maskClass: "lightbox-mask",
-		// Image href (usually assigned from the anchor's href)
-		href: "",
-		imgWidth: "auto",
-		imgHeight: "auto",
+		// Classes for doing your own transitions
+		openClass: "lightbox-open",
+		closedClass: "lightbox-closed",
 		// Close the lightbox when the mask is clicked
 		closeOnMaskClick: true,
 		// Expand the mask to handle document height being larger than window height
 		// This is sometimes not ideal if the container is something other than the body
 		expandMask: true,
+		// Disable the mask
+		disableMask: false,
+		// The actual lightbox the element should correspond to
+		// If one already exists hidden on the page,
+		// add its ID selector here
+		target: "",
+		// Image href (usually assigned from the anchor's href)
+		href: "",
+		imgWidth: "auto",
+		imgHeight: "auto",
 		// The basic skeleton for a lightbox
 		// Don"t use a data-* attribute to set this (that's just ugly)
 		skeleton: "<div><a href='#' class='lightbox-close' data-bypass>X</a></div>"
@@ -131,15 +133,8 @@
 				options.willOpen.call( $target[0], this );
 			}
 
-			// Fade in mask
-			if ( options.expandMask ) {
-				this._expandMask();
-			}
 			// Center
 			$target.css( "marginLeft", mL );
-
-			// Fade in mask
-			this.$mask.stop().fadeIn( fadeTime, easing );
 
 			/**
 			 * Called after the fadeIn or the transition completes
@@ -160,6 +155,15 @@
 				setTimeout( complete, fadeTime );
 			} else {
 				$target.stop().fadeIn( fadeTime, easing, complete );
+			}
+
+			if ( !options.disableMask ) {
+
+				// Fade in mask
+				if ( options.expandMask ) {
+					this._expandMask();
+				}
+				this.$mask.stop().fadeIn( fadeTime, easing );
 			}
 		},
 
@@ -183,9 +187,6 @@
 
 			this.opened = false;
 
-			// Fade out mask
-			this.$mask.stop().fadeOut( fadeTime, easing );
-
 			/**
 			 * Called after the fadeOut or the transition completes
 			 */
@@ -204,6 +205,11 @@
 				setTimeout( complete, fadeTime );
 			} else {
 				$target.stop().fadeOut( fadeTime, easing, complete );
+			}
+
+			if ( !options.disableMask ) {
+				// Fade out mask
+				this.$mask.stop().fadeOut( fadeTime, easing );
 			}
 		},
 
@@ -262,7 +268,7 @@
 		unbind: function() {
 			this.$elem
 				.add( this.$mask )
-				.add( this.$close ).unbind(".minlight");
+				.add( this.$close ).off(".minlight");
 		},
 
 		/**
@@ -314,15 +320,19 @@
 						}
 						value.append( self.$mask, self.$target );
 						break;
-					case "target":
-						self._removeTarget();
-						break;
 					case "imgWidth":
 					case "imgHeight":
 						// Keep data-* attribute precedence
 						if ( self.$img && self.$elem.attr("data-" + key) === undefined ) {
 							self.$img[ key.replace("img", "").toLowerCase() ]( value );
 						}
+						break;
+					case "target":
+					case "disableMask":
+						self._removeTarget();
+						/* falls through */
+					case "closeOnMaskClick":
+						self.unbind();
 				}
 				self.options[ key ] = value;
 				switch( key ) {
@@ -333,7 +343,11 @@
 						self.bind();
 						break;
 					case "target":
+					case "disableMask":
 						self._setTarget();
+						/* falls through */
+					case "closeOnMaskClick":
+						self.bind();
 				}
 			});
 		},
@@ -381,12 +395,20 @@
 				.addClass( options.lightboxClass )
 				.data( "_minNumAttached", ($target.data("_minNumAttached") || 0) + 1 );
 
+			if ( options.transition ) {
+				$target.addClass( options.closedClass );
+			}
+
 			// Create a mask if it does not exist
-			this.$mask = $target.prev("." + options.maskClass.split(" ")[0] );
-			if ( !this.$mask.length ) {
-				this.$mask = $("<div>")
-					.addClass( options.maskClass )
-					.insertBefore( $target );
+			if ( options.disableMask ) {
+				this.$mask = $();
+			} else {
+				this.$mask = $target.prev("." + options.maskClass.split(" ")[0] );
+				if ( !this.$mask.length ) {
+					this.$mask = $("<div>")
+						.addClass( options.maskClass )
+						.insertBefore( $target );
+				}
 			}
 			this.$target = $target;
 			this.$close = $target.find(".lightbox-close");
