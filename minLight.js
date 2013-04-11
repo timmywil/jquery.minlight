@@ -151,7 +151,8 @@
 
 			// Transition or fade
 			if ( options.transition ) {
-				$target.removeClass( options.closedClass ).addClass( options.openClass );
+				// Display should be shown before adding the class (use opacity to fade in on transition)
+				$target.show().removeClass( options.closedClass ).addClass( options.openClass );
 				setTimeout( complete, fadeTime );
 			} else {
 				$target.stop().fadeIn( fadeTime, easing, complete );
@@ -191,6 +192,8 @@
 			 * Called after the fadeOut or the transition completes
 			 */
 			function complete() {
+				// Hide regardless
+				$target.hide();
 				if ( $.isFunction(fn) ) {
 					fn.call( $target[0], self );
 				}
