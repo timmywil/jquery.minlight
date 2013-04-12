@@ -1,6 +1,6 @@
 /**
- * @license minLight.js v0.3.2
- * Updated: Thu Apr 11 2013
+ * @license minLight.js v0.3.3
+ * Updated: Fri Apr 12 2013
  * A minimal lightbox that fades in/out a specified target
  * Copyright (c) 2013 timmy willison
  * Released under the MIT license
@@ -152,7 +152,11 @@
 			// Transition or fade
 			if ( options.transition ) {
 				// Display should be shown before adding the class (use opacity to fade in on transition)
-				$target.show().removeClass( options.closedClass ).addClass( options.openClass );
+				$target.show();
+				// Kick opening to the end of the stack
+				setTimeout(function() {
+					$target.removeClass( options.closedClass ).addClass( options.openClass );
+				});
 				setTimeout( complete, fadeTime );
 			} else {
 				$target.stop().fadeIn( fadeTime, easing, complete );
