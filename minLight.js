@@ -387,7 +387,8 @@
 						.prepend( this.content )
 						.appendTo( options.container );
 
-					$target.attr( "id", target.replace("#", "") );
+					// Unescape characters in the selector
+					$target.attr( "id", target.replace("#", "").replace(/\\/g, "") );
 
 				} else {
 					$target = $elem;

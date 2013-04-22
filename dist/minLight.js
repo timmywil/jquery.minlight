@@ -1,6 +1,6 @@
 /**
- * @license minLight.js v0.3.3
- * Updated: Fri Apr 12 2013
+ * @license minLight.js v0.3.4
+ * Updated: Mon Apr 22 2013
  * A minimal lightbox that fades in/out a specified target
  * Copyright (c) 2013 timmy willison
  * Released under the MIT license
@@ -387,7 +387,8 @@
 						.prepend( this.content )
 						.appendTo( options.container );
 
-					$target.attr( "id", target.replace("#", "") );
+					// Unescape characters in the selector
+					$target.attr( "id", target.replace("#", "").replace(/\\/g, "") );
 
 				} else {
 					$target = $elem;
