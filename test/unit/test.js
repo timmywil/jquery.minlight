@@ -39,13 +39,12 @@ test("Usage", 12, function() {
 	$min.minLight({
 		container: "#qunit-fixture",
 		fadeTime: 50,
-		onOpen: function( min ) {
-			var $this = $(this);
-			equal( $this.css("display"), "block", "Method: open (check display)" );
+		onOpen: function( e, min ) {
+			equal( min.$target.css("display"), "block", "Method: open (check display)" );
 			min.close();
 		},
-		onClose: function() {
-			equal( $(this).css("display"), "none", "Method: close (check display)" );
+		onClose: function( e, min ) {
+			equal( min.$target.css("display"), "none", "Method: close (check display)" );
 			start();
 		}
 	});
@@ -59,8 +58,8 @@ test("Input", 4, function() {
 			href: "frame.jpg",
 			container: "#main",
 			fadeTime: 50,
-			onOpen: function() {
-				equal( this.parentNode.id, "main", "Custom container and onOpen set on focus" );
+			onOpen: function( e, min ) {
+				equal( min.$target[0].parentNode.id, "main", "Custom container and onOpen set on focus" );
 				start();
 			}
 		}),

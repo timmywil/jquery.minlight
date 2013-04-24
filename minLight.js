@@ -70,6 +70,8 @@
 	//
 	// Order of precendence: data-* attributes > options passed on creation > defaults
 	Lightbox.defaults = {
+		// Namespace for binding events
+		namespace: ".minlight",
 		// Animation time in ms
 		fadeTime: 200,
 		easing: "swing",
@@ -100,8 +102,9 @@
 		// The basic skeleton for a lightbox
 		// Don"t use a data-* attribute to set this (that's just ugly)
 		skeleton: "<div><a href='#' class='lightbox-close' data-bypass>X</a></div>"
-		// onOpen, onClose cannot be extended with data-*, so they are included in defaults
+		// onOpen, onClose, willOpen, willClose cannot be extended with data-*, so they are included in defaults
 		// they can be passed on creation or changed with the `option` method
+		// they can also be bound on the element as "minlightopen" and "minlightclose"
 	};
 
 	Lightbox.prototype = {
@@ -128,10 +131,8 @@
 				$target = this.$target,
 				mL = $target.outerWidth() / 2 * -1;
 
-			// willOpen callback
-			if ( $.isFunction(options.willOpen) ) {
-				options.willOpen.call( $target[0], this );
-			}
+			// Trigger willOpen
+			this._trigger("willopen");
 
 			// Center
 			$target.css( "marginLeft", mL );
@@ -144,9 +145,8 @@
 				if ( $.isFunction(fn) ) {
 					fn.call( $target[0], self );
 				}
-				if ( $.isFunction(options.onOpen) ) {
-					options.onOpen.call( $target[0], self );
-				}
+				// Trigger open
+				self._trigger("open");
 			}
 
 			// Transition or fade
@@ -186,9 +186,7 @@
 				$target = this.$target;
 
 			// willClose
-			if ( $.isFunction(options.willClose) ) {
-				options.willClose.call( $target[0], this );
-			}
+			this._trigger("willclose");
 
 			this.opened = false;
 
@@ -201,9 +199,7 @@
 				if ( $.isFunction(fn) ) {
 					fn.call( $target[0], self );
 				}
-				if ( $.isFunction(options.onClose) ) {
-					options.onClose.call( $target[0], self );
-				}
+				self._trigger("close");
 			}
 
 			// Transition or fade
@@ -240,30 +236,51 @@
 			var elem = this.elem,
 				$elem = this.$elem,
 				$closers = this.$close,
+				options = this.options,
+				ns = options.namespace,
+				events = {},
 				self = this;
+
+			// Bind minLight events from options
+			$.each([ "Open", "Close" ], function() {
+				// onOpen, onClose
+				var m = options[ "on" + this ];
+				if ( $.isFunction(m) ) {
+					events[ "minlight" + this.toLowerCase() + ns ] = m;
+				}
+				// willOpen, willClose
+				m = options[ "will" + this ];
+				if ( $.isFunction(m) ) {
+					events[ "minlightwill" + this.toLowerCase() + ns ] = m;
+				}
+			});
 
 			// Use click for links
 			if ( $.nodeName(elem, "a") || $.nodeName(elem, "button") ) {
-				$elem.on("click.minlight", function( e ) {
+				events[ "click" + ns ] = function( e ) {
 					e.preventDefault();
 					self.toggle();
-				});
+				};
 
 			// Use focus if focusable
 			// jQuery checks focusable internally when retrieving tabIndex
 			} else if ( $elem.prop("tabIndex") !== undefined ) {
-				$elem.on("focus.minlight", function() {
+				events[ "focus" + ns ] = function() {
 					self.open(function() {
 						$elem.blur();
 					});
-				});
+				};
+			}
+
+			if ( !$.isEmptyObject(events) ) {
+				$elem.on( events );
 			}
 
 			// Bind any close links
-			if ( this.options.closeOnMaskClick ) {
+			if ( options.closeOnMaskClick ) {
 				$closers = $closers.add( this.$mask );
 			}
-			$closers.bind( "click.minlight", function( e ) {
+			$closers.on( "click" + ns, function( e ) {
 				e.preventDefault();
 				self.close();
 			});
@@ -275,7 +292,7 @@
 		unbind: function() {
 			this.$elem
 				.add( this.$mask )
-				.add( this.$close ).off(".minlight");
+				.add( this.$close ).off( this.options.namespace );
 		},
 
 		/**
@@ -339,6 +356,7 @@
 						self._removeTarget();
 						/* falls through */
 					case "closeOnMaskClick":
+					case "namespace":
 						self.unbind();
 				}
 				self.options[ key ] = value;
@@ -354,9 +372,20 @@
 						self._setTarget();
 						/* falls through */
 					case "closeOnMaskClick":
+					case "namespace":
 						self.bind();
 				}
 			});
+		},
+
+		/**
+		 * Triggers a minLight event
+		 * @param {String} name
+		 * @param {Mixed} [arg1, arg2, arg3, ...] Arguments to append to the trigger
+		 */
+		_trigger: function ( name ) {
+			var args = slice.call( arguments, 1 );
+			this.$elem.triggerHandler( "minlight" + name, args.length ? [this].concat(args) : [this] );
 		},
 
 		/**
@@ -384,19 +413,24 @@
 					}
 
 					$target = $( options.skeleton ).data( "_minGenerated", true )
-						.prepend( this.content )
-						.appendTo( options.container );
+						.prepend( this.content );
 
 					// Unescape characters in the selector
 					$target.attr( "id", target.replace("#", "").replace(/\\/g, "") );
 
 				} else {
+					// Move elem to our container
 					$target = $elem;
 				}
 			}
 
 			if ( !$target.length ) {
-				$.error( "minLight - specified container is not on the page: " + target );
+				$.error( "minLight - target not found: " + target );
+			}
+
+			// Add target to the container
+			if ( !$.contains(document, $target[0]) ) {
+				$target.appendTo( options.container );
 			}
 
 			$target

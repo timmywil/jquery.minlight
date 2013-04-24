@@ -93,8 +93,9 @@ Lightbox.defaults = {
 	// The basic skeleton for a lightbox
 	// Don"t use a data-* attribute to set this (that's just ugly)
 	skeleton: "<div><a href='#' class='lightbox-close' data-bypass>X</a></div>"
-	// onOpen, onClose cannot be extended with data-*, so they are included in defaults
+	// onOpen, onClose, willOpen, willClose cannot be extended with data-*, so they are included in defaults
 	// they can be passed on creation or changed with the `option` method
+	// they can also be bound on the element as "minlightopen", "minlightclose", "minlightwillopen", "minlightwillclose"
 };
 ```
 
@@ -151,3 +152,42 @@ $elem.minLight("option", {
 ```
 
 Any option can be changed. See the defaults above for a list.
+
+## Events
+
+### `"minlightopen"`
+
+__Arguments Received__
+
+  1. `e` _(jQuery.Event)_: jQuery event object
+  2. `min` _(Lightbox)_: The minLight instance
+
+Fired when the lightbox has opened (after animation completion)
+
+### `"minlightclose"`
+
+__Arguments Received__
+
+  1. `e` _(jQuery.Event)_: jQuery event object
+  2. `min` _(Lightbox)_: The minLight instance
+
+Fired when the lightbox is closed (after animation completion)
+
+### `"minlightwillopen"`
+
+__Arguments Received__
+
+  1. `e` _(jQuery.Event)_: jQuery event object
+  2. `min` _(Lightbox)_: The minLight instance
+
+Fired when the lightbox is about to open (before animation completion)
+
+### `"minlightwillclose"`
+
+__Arguments Received__
+
+  1. `e` _(jQuery.Event)_: jQuery event object
+  2. `min` _(Lightbox)_: The minLight instance
+
+Fired when the lightbox is about to close (before animation completion)
+
