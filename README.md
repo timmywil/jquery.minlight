@@ -33,9 +33,10 @@ define([ "jquery", "jquery-plugins/minLight" ], function( $ ) {
 // Will bind to click
 $("a.minlight-links").minLight({
 	container: "#main",
-	onOpen: function() {
-		// context is the lightbox the link has opened
-		console.log( this ); // <div class="lightbox"></div>
+	onOpen: function( e, minlight ) {
+		// context is the minLight element
+		// minlight is the minlight instance
+		// $target (the lightbox) is available at minlight.$target
 	}
 });
 
