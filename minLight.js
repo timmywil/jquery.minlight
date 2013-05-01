@@ -101,7 +101,7 @@
 		imgHeight: "auto",
 		// The basic skeleton for a lightbox
 		// Don"t use a data-* attribute to set this (that's just ugly)
-		skeleton: "<div><a href='#' class='lightbox-close' data-bypass>X</a></div>"
+		skeleton: "<div><a href='#' class='lightbox-close' data-bypass='true'>X</a></div>"
 		// onOpen, onClose, willOpen, willClose cannot be extended with data-*, so they are included in defaults
 		// they can be passed on creation or changed with the `option` method
 		// they can also be bound on the element as "minlightopen" and "minlightclose"

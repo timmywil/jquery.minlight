@@ -1,6 +1,6 @@
 /**
- * @license minLight.js v0.4.1
- * Updated: Thu Apr 25 2013
+ * @license minLight.js v0.4.2
+ * Updated: Wed May 01 2013
  * A minimal lightbox that fades in/out a specified target
  * Copyright (c) 2013 timmy willison
  * Released under the MIT license
@@ -101,7 +101,7 @@
 		imgHeight: "auto",
 		// The basic skeleton for a lightbox
 		// Don"t use a data-* attribute to set this (that's just ugly)
-		skeleton: "<div><a href='#' class='lightbox-close' data-bypass>X</a></div>"
+		skeleton: "<div><a href='#' class='lightbox-close' data-bypass='true'>X</a></div>"
 		// onOpen, onClose, willOpen, willClose cannot be extended with data-*, so they are included in defaults
 		// they can be passed on creation or changed with the `option` method
 		// they can also be bound on the element as "minlightopen" and "minlightclose"
