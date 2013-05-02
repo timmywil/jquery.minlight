@@ -1,6 +1,6 @@
 /**
- * @license minLight.js v0.4.2
- * Updated: Wed May 01 2013
+ * @license minLight.js v0.4.3
+ * Updated: Thu May 02 2013
  * A minimal lightbox that fades in/out a specified target
  * Copyright (c) 2013 timmy willison
  * Released under the MIT license
@@ -392,6 +392,7 @@
 		 * Sets the lightbox target; creates a lightbox with an image if one does not exist
 		 */
 		_setTarget: function() {
+			var tabIndex;
 			var elem = this.elem;
 			var $elem = this.$elem;
 			var options = this.options;
@@ -401,7 +402,7 @@
 			if ( !$target.length ) {
 				// If this is an anchor or is focusable like an input,
 				// create an automated target
-				if ( $.nodeName( elem, "a" ) || $elem.prop("tabIndex") !== undefined ) {
+				if ( $.nodeName( elem, "a" ) || ((tabIndex = $elem.prop("tabIndex")) !== undefined && tabIndex !== -1) ) {
 					// Create a new target if they do not exist on the page
 					if ( !this.content ) {
 						this.content = this.$img = $("<img>").attr({

@@ -94,6 +94,12 @@ test("Transition", 4, function() {
 	});
 });
 
+test("Target", 1, function() {
+	var $div = $("div").first();
+	var min = $div.minLight().minLight("instance");
+	equal( $div[0], min.$target[0], "An unfocusable element is used as the target" );
+});
+
 test("No conflict", 1, function() {
 	var j = jQuery.noConflict( true );
 	ok( j(".minlight-link").minLight().data("__minlight"), "minLight works in noConflict" );
