@@ -76,6 +76,8 @@ Lightbox.defaults = {
 	// Classes for doing your own transitions
 	openClass: "lightbox-open",
 	closedClass: "lightbox-closed",
+	// Class for user-defined close button
+	closeClass: "",
 	// Close the lightbox when the mask is clicked
 	closeOnMaskClick: true,
 	// Expand the mask to handle document height being larger than window height

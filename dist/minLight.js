@@ -1,6 +1,6 @@
 /**
- * @license minLight.js v0.4.3
- * Updated: Thu May 02 2013
+ * @license minLight.js v0.4.4
+ * Updated: Wed May 08 2013
  * A minimal lightbox that fades in/out a specified target
  * Copyright (c) 2013 timmy willison
  * Released under the MIT license
@@ -84,6 +84,8 @@
 		// Classes for doing your own transitions
 		openClass: "lightbox-open",
 		closedClass: "lightbox-closed",
+		// Class for user-defined close button
+		closeClass: "",
 		// Close the lightbox when the mask is clicked
 		closeOnMaskClick: true,
 		// Expand the mask to handle document height being larger than window height
@@ -454,7 +456,8 @@
 				}
 			}
 			this.$target = $target;
-			this.$close = $target.find(".lightbox-close");
+			// Cache close buttons
+			this.$close = $target.find(".lightbox-close").add( $target.find( options.closeClass ) );
 		},
 
 		/**
