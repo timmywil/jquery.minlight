@@ -84,8 +84,9 @@
 		// Classes for doing your own transitions
 		openClass: "lightbox-open",
 		closedClass: "lightbox-closed",
-		// Class for user-defined close button
-		closeClass: "",
+		// Selector for finding all user-defined close buttons in the target
+		// for quick binding to close
+		closeSelect: "",
 		// Close the lightbox when the mask is clicked
 		closeOnMaskClick: true,
 		// Expand the mask to handle document height being larger than window height
@@ -457,7 +458,7 @@
 			}
 			this.$target = $target;
 			// Cache close buttons
-			this.$close = $target.find(".lightbox-close").add( $target.find( options.closeClass ) );
+			this.$close = $target.find(".lightbox-close").add( $target.find( options.closeSelect ) );
 		},
 
 		/**
