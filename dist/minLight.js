@@ -1,6 +1,6 @@
 /**
- * @license minLight.js v0.4.5
- * Updated: Thu May 09 2013
+ * @license minLight.js v0.4.6
+ * Updated: Fri May 10 2013
  * A minimal lightbox that fades in/out a specified target
  * Copyright (c) 2013 timmy willison
  * Released under the MIT license
@@ -124,99 +124,14 @@
 		 * Opens the lightbox
 		 */
 		open: function( fn ) {
-			if ( this.opened ) {
-				return;
-			}
-			var self = this,
-				options = this.options,
-				fadeTime = options.fadeTime,
-				easing = options.easing,
-				$target = this.$target,
-				mL = $target.outerWidth() / 2 * -1;
-
-			// Trigger willOpen
-			this._trigger("willopen");
-
-			// Center
-			$target.css( "marginLeft", mL );
-
-			/**
-			 * Called after the fadeIn or the transition completes
-			 */
-			function complete() {
-				self.opened = true;
-				if ( $.isFunction(fn) ) {
-					fn.call( $target[0], self );
-				}
-				// Trigger open
-				self._trigger("open");
-			}
-
-			// Transition or fade
-			if ( options.transition ) {
-				// Display should be shown before adding the class (use opacity to fade in on transition)
-				$target.show();
-				// Kick opening to the end of the stack
-				setTimeout(function() {
-					$target.removeClass( options.closedClass ).addClass( options.openClass );
-				});
-				setTimeout( complete, fadeTime );
-			} else {
-				$target.stop().fadeIn( fadeTime, easing, complete );
-			}
-
-			if ( !options.disableMask ) {
-
-				// Fade in mask
-				if ( options.expandMask ) {
-					this._expandMask();
-				}
-				this.$mask.stop().fadeIn( fadeTime, easing );
-			}
+			this._openClose( false, fn );
 		},
 
 		/**
 		 * Close the lightbox
 		 */
 		close: function( fn ) {
-			if ( !this.opened ) {
-				return;
-			}
-			var self = this,
-				options = this.options,
-				fadeTime = options.fadeTime,
-				easing = options.easing,
-				$target = this.$target;
-
-			// willClose
-			this._trigger("willclose");
-
-			this.opened = false;
-
-			/**
-			 * Called after the fadeOut or the transition completes
-			 */
-			function complete() {
-				// Hide regardless
-				$target.hide();
-				if ( $.isFunction(fn) ) {
-					fn.call( $target[0], self );
-				}
-				self._trigger("close");
-			}
-
-			// Transition or fade
-			if ( options.transition ) {
-				$target.removeClass( options.openClass ).addClass( options.closedClass );
-				setTimeout( complete, fadeTime );
-			} else {
-				$target.stop().fadeOut( fadeTime, easing, complete );
-			}
-
-			if ( !options.disableMask ) {
-				// Fade out mask
-				this.$mask.stop().fadeOut( fadeTime, easing );
-			}
+			this._openClose( true, fn );
 		},
 
 		/**
@@ -224,12 +139,8 @@
 		 * @param {Function} fn Callback to be called on open/close completion
 		 */
 		toggle: function( fn ) {
-			// Toggle on click, if possible
-			if ( this.opened ) {
-				this.close( fn );
-			} else {
-				this.open( fn );
-			}
+			// Toggle on click
+			this[ this.opened ? "close" : "open" ]( fn );
 		},
 
 		/**
@@ -389,6 +300,74 @@
 		_trigger: function ( name ) {
 			var args = slice.call( arguments, 1 );
 			this.$elem.triggerHandler( "minlight" + name, args.length ? [this].concat(args) : [this] );
+		},
+
+		/**
+		 * Opens or closes the lightbox
+		 * @param {Boolean} close Whether to close the lightbox
+		 * @param {Function} [fn] Complete callback for opening/closing
+		 */
+		_openClose: function( close, fn ) {
+			if ( !$.isFunction(fn) ) { fn = $.noop; }
+			var $target = this.$target;
+			if ( this.opened ^ close ) {
+				// Call complete
+				fn.call( $target[0], this );
+				return;
+			}
+			var self = this,
+				options = this.options,
+				fadeTime = options.fadeTime,
+				easing = options.easing,
+				mL = $target.outerWidth() / 2 * -1,
+				str = close ? "close" : "open";
+
+			// Trigger will event
+			this._trigger( "will" + str );
+
+			// Center
+			$target.css( "marginLeft", mL );
+
+			/**
+			 * Called after the fadeIn or the transition completes
+			 */
+			function complete() {
+				self.opened = !close;
+				if ( close ) {
+					// Hide regardless
+					$target.hide();
+				}
+				fn.call( $target[0], self );
+				// Trigger event
+				self._trigger( str );
+			}
+
+			// Transition or fade
+			if ( options.transition ) {
+				// Display should be shown before adding the class (use opacity to fade in on transition)
+				if ( !close ) {
+					$target.show();
+				}
+				// Kick opening/closing to the end of the stack
+				setTimeout(function() {
+					if ( close ) {
+						$target.removeClass( options.openClass ).addClass( options.closedClass );
+					} else {
+						$target.removeClass( options.closedClass ).addClass( options.openClass );
+					}
+				});
+				setTimeout( complete, fadeTime );
+			} else {
+				$target.stop()[ close ? "fadeOut" : "fadeIn" ]( fadeTime, easing, complete );
+			}
+
+			// Handle mask
+			if ( !options.disableMask ) {
+				if ( !close && options.expandMask ) {
+					this._expandMask();
+				}
+				this.$mask.stop()[ close ? "fadeOut" : "fadeIn" ]( fadeTime, easing );
+			}
 		},
 
 		/**
