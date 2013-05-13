@@ -87,7 +87,7 @@ test("Transition", 4, function() {
 	$min.minLight("open", function() {
 		ok( $target.hasClass(openClass), "minLight applies openClass on open" );
 		$min.minLight("close", function() {
-			ok( $target.hasClass(closedClass), "minLight applies closeClass on close" );
+			ok( $target.hasClass(closedClass), "minLight applies closedClass on close" );
 			ok( !$target.hasClass(openClass), "minLight removes openClass on close" );
 			start();
 		});
