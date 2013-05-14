@@ -147,7 +147,8 @@
 		 * Bind all minimal Lightbox clicks (toggling elem, close button, mask)
 		 */
 		bind: function() {
-			var elem = this.elem,
+			var tabIndex,
+				elem = this.elem,
 				$elem = this.$elem,
 				$closers = this.$close,
 				options = this.options,
@@ -178,7 +179,7 @@
 
 			// Use focus if focusable
 			// jQuery checks focusable internally when retrieving tabIndex
-			} else if ( $elem.prop("tabIndex") !== undefined ) {
+			} else if ( (tabIndex = $elem.prop("tabIndex")) !== undefined && tabIndex !== -1 ) {
 				events[ "focus" + ns ] = function() {
 					self.open(function() {
 						$elem.blur();
