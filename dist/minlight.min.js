@@ -1,5 +1,5 @@
 /**
- * @license minlight.js v0.5.2
+ * @license minlight.js v0.5.3
  * Updated: Thu Jul 18 2013
  * A minimal lightbox that fades in/out a specified target
  * Copyright (c) 2013 timmy willison

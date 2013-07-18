@@ -11,8 +11,8 @@ module.exports = function( grunt ) {
 		pkg: grunt.file.readJSON('package.json'),
 		build: {
 			dist: {
-				dest: 'dist/minLight.js',
-				src: 'minLight.js'
+				dest: 'dist/minlight.js',
+				src: 'minlight.js'
 			},
 			bower: {
 				src: 'bower.json'
@@ -23,8 +23,8 @@ module.exports = function( grunt ) {
 		},
 		compare_size: {
 			files: [
-				'dist/minLight.js',
-				'dist/minLight.min.js'
+				'dist/minlight.js',
+				'dist/minlight.min.js'
 			],
 			options: {
 				cache: 'dist/.sizecache.json',
@@ -49,7 +49,7 @@ module.exports = function( grunt ) {
 		jshint: {
 			all: [
 				'Gruntfile.js',
-				'minLight.js',
+				'minlight.js',
 				'test/unit/*.js'
 			],
 			options: {
@@ -57,8 +57,8 @@ module.exports = function( grunt ) {
 			}
 		},
 		uglify: {
-			'dist/minLight.min.js': [
-				'dist/minLight.js'
+			'dist/minlight.min.js': [
+				'dist/minlight.js'
 			],
 			options: {
 				preserveComments: 'some'
@@ -89,7 +89,7 @@ module.exports = function( grunt ) {
 
 	grunt.registerMultiTask(
 		'build',
-		'Build minLight to the dist directory',
+		'Build minlight to the dist directory',
 		function() {
 			var data = this.data;
 			var src = data.src;
