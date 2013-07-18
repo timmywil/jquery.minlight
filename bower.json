@@ -1,6 +1,6 @@
 {
   "name": "jquery.minlight",
-  "version": "0.4.8",
+  "version": "0.5.0",
   "main": "dist/minlight.js",
   "ignore": [
     "**/.*",

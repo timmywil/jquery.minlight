@@ -10,33 +10,33 @@ test('Basic requirements', 7, function() {
 });
 
 test('Usage', 12, function() {
-	var $min = $('.minlight-link').minLight(),
-		instance = $min.minLight('instance'),
+	var $min = $('.minlight-link').minlight(),
+		instance = $min.minlight('instance'),
 		$target = instance.$target;
 
 	ok( $min.length, 'minLink is present' );
-	ok( $min.data('__minlight'), 'minLight instance added as data' );
+	ok( $min.data('__minlight'), 'minlight instance added as data' );
 	ok( $target[0].parentNode, 'Target added' );
 	ok( instance.$mask[0].parentNode, 'Mask added' );
 
-	$min.minLight('destroy');
+	$min.minlight('destroy');
 	ok( !$min.data('__minlight'), 'Method: destroy (data)' );
 	ok( !$target[0].parentNode, 'Method: destroy (target removed)' );
 
-	$min.minLight({
+	$min.minlight({
 		target: '#awesome-lightbox'
 	});
-	instance = $min.minLight('instance');
+	instance = $min.minlight('instance');
 	$target = instance.$target;
 
 	equal( $target[0].id, 'awesome-lightbox', 'target is awesome-lightbox' );
 	ok( instance.$mask[0].parentNode, 'Mask present' );
 
-	$min.minLight('destroy');
+	$min.minlight('destroy');
 	ok( !$min.data('__minlight'), 'Method: destroy (data)' );
 	ok( $target[0].parentNode, 'Method: destroy (target not removed, it existed before)' );
 
-	$min.minLight({
+	$min.minlight({
 		container: '#qunit-fixture',
 		fadeTime: 50,
 		onOpen: function( e, min ) {
@@ -50,11 +50,11 @@ test('Usage', 12, function() {
 	});
 
 	stop();
-	$min.minLight('open');
+	$min.minlight('open');
 });
 
 test('Input', 4, function() {
-	var $minInput = $('#minlight-input').minLight({
+	var $minInput = $('#minlight-input').minlight({
 			href: 'frame.jpg',
 			container: '#main',
 			fadeTime: 50,
@@ -63,7 +63,7 @@ test('Input', 4, function() {
 				start();
 			}
 		}),
-		instance = $minInput.minLight('instance'),
+		instance = $minInput.minlight('instance'),
 		$target = instance.$target;
 
 	ok( instance, 'Instance created from input' );
@@ -75,20 +75,20 @@ test('Input', 4, function() {
 });
 
 test('Transition', 4, function() {
-	var $min = $('.minlight-link').minLight('destroy').minLight({
+	var $min = $('.minlight-link').minlight('destroy').minlight({
 		transition: true
 	});
-	ok( $min.minLight('option', 'transition'), 'Transition option set' );
+	ok( $min.minlight('option', 'transition'), 'Transition option set' );
 
 	stop();
-	var openClass = $min.minLight('option', 'openClass');
-	var closedClass = $min.minLight('option', 'closedClass');
-	var $target = $min.minLight('instance').$target;
-	$min.minLight('open', function() {
-		ok( $target.hasClass(openClass), 'minLight applies openClass on open' );
-		$min.minLight('close', function() {
-			ok( $target.hasClass(closedClass), 'minLight applies closedClass on close' );
-			ok( !$target.hasClass(openClass), 'minLight removes openClass on close' );
+	var openClass = $min.minlight('option', 'openClass');
+	var closedClass = $min.minlight('option', 'closedClass');
+	var $target = $min.minlight('instance').$target;
+	$min.minlight('open', function() {
+		ok( $target.hasClass(openClass), 'minlight applies openClass on open' );
+		$min.minlight('close', function() {
+			ok( $target.hasClass(closedClass), 'minlight applies closedClass on close' );
+			ok( !$target.hasClass(openClass), 'minlight removes openClass on close' );
 			start();
 		});
 	});
@@ -96,13 +96,13 @@ test('Transition', 4, function() {
 
 test('Target', 1, function() {
 	var $div = $('div').first();
-	var min = $div.minLight().minLight('instance');
+	var min = $div.minlight().minlight('instance');
 	equal( $div[0], min.$target[0], 'An unfocusable element is used as the target' );
 });
 
 test('No conflict', 1, function() {
 	var j = jQuery.noConflict( true );
-	ok( j('.minlight-link').minLight().data('__minlight'), 'minLight works in noConflict' );
+	ok( j('.minlight-link').minlight().data('__minlight'), 'minlight works in noConflict' );
 	// Restore
 	window.$ = window.jQuery = j;
 });

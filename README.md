@@ -1,26 +1,28 @@
-# jQuery minLight lightbox plugin
+# jQuery minlight lightbox plugin
 
-minLight is meant to create the most common, simple lightboxes that use a customizable fading animation. It is also perfectly suited for mobile jQuery projects.
+minlight is meant to create the most common, simple lightboxes that use a customizable fading animation. It is also perfectly suited for mobile jQuery projects.
 
-By default, minLight will open/close lightboxes using a simple javascript fade. However, set the `transition` option to `true` and use your own custom css transitions using an `openClass` and a `closedClass`.
+By default, minlight will open/close lightboxes using a simple javascript fade. However, set the `transition` option to `true` and use your own custom css transitions using an `openClass` and a `closedClass`.
 
-minLight.min.js (4.8kb/1.9kb gzip), included in this repo, is compressed with [uglifyjs](https://github.com/mishoo/UglifyJS).
+Check out [Effeckt.css](http://h5bp.github.io/Effeckt.css/dist/) for performant CSS animations and transitions to use with your lightboxes.
+
+minlight.min.js (4.8kb/1.9kb gzip), included in this repo, is compressed with [uglifyjs](https://github.com/mishoo/UglifyJS).
 
 
-## Loading minLight
-minLight can obviously be included with your scripts at the end of the body, but minLight supports AMD for javascript module love.
+## Loading minlight
+minlight can obviously be included with your scripts at the end of the body, but minlight supports AMD for javascript module love.
 
 With script tags:
 
 ```html
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-<script src="/js/minLight.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="/js/minlight.js"></script>
 ```
 
 With AMD loader in an anonymous module:
 
 ```js
-define([ "jquery", "jquery-plugins/minLight" ], function( $ ) {
+define([ "jquery", "jquery-plugins/minlight" ], function( $ ) {
 	$(function() {
 		$(".minlight-links").minLight();
 	});
@@ -31,17 +33,17 @@ define([ "jquery", "jquery-plugins/minLight" ], function( $ ) {
 
 ```js
 // Will bind to click
-$("a.minlight-links").minLight({
+$("a.minlight-links").minlight({
 	container: "#main",
 	onOpen: function( e, minlight ) {
-		// context is the minLight element
+		// context is the minlight element
 		// minlight is the minlight instance
 		// $target (the lightbox) is available at minlight.$target
 	}
 });
 
 // Will bind to focus
-$("input.minlight-input").minLight({
+$("input.minlight-input").minlight({
 	href: "awesome.jpg"
 });
 ```
@@ -51,7 +53,7 @@ $("input.minlight-input").minLight({
 All options can be overridden by passing an object literal like any other plugin,<br>
 with the `"option"` method,<br>
 OR with data-* attributes on the element,<br>
-which can be very useful when calling minLight on more than one element at a time.
+which can be very useful when calling minlight on more than one element at a time.
 
 e.g.
 
@@ -105,12 +107,12 @@ Lightbox.defaults = {
 
 ## Methods
 
-Methods can be called in the same way as a widget from the UI widget factory. Pass a method name to minLight. Strings are interpreted as method names.
+Methods can be called in the same way as a widget from the UI widget factory. Pass a method name to minlight. Strings are interpreted as method names.
 
 ### `open`
 
 ```js
-$elem.minLight("open");
+$elem.minlight("open");
 ```
 
 Open the lightbox
@@ -118,7 +120,7 @@ Open the lightbox
 ### `close`
 
 ```js
-$elem.minLight("close");
+$elem.minlight("close");
 ```
 
 Close the lightbox
@@ -126,29 +128,29 @@ Close the lightbox
 ### `destroy`
 
 ```js
-$elem.minLight("destroy");
+$elem.minlight("destroy");
 ```
 
-Unbinds all events and removes all data, including the minLight instance on the element.
+Unbinds all events and removes all data, including the minlight instance on the element.
 
 ### `instance`
 
 ```js
-var minInstance = $elem.minLight("instance");
+var minInstance = $elem.minlight("instance");
 ```
 
-Retreives the minLight instance(s) from the set. If there are multiple, you will get an array of instances. If there is only one, you will just get the instance of minLight.
+Retreives the minlight instance(s) from the set. If there are multiple, you will get an array of instances. If there is only one, you will just get the instance of minlight.
 
 ### `option`
 
 ```js
 // One at a time
-$elem.minLight("option", "onOpen", function() {
+$elem.minlight("option", "onOpen", function() {
 	// Replace the onOpen callback
 });
 
 // Several options at once
-$elem.minLight("option", {
+$elem.minlight("option", {
 	fadeTime: "fast",
 	container: "#main",
 	maskClass: "super-mask"
@@ -164,7 +166,7 @@ Any option can be changed. See the defaults above for a list.
 __Arguments Received__
 
   1. `e` _(jQuery.Event)_: jQuery event object
-  2. `min` _(Lightbox)_: The minLight instance
+  2. `min` _(Lightbox)_: The minlight instance
 
 Fired when the lightbox has opened (after animation completion)
 
@@ -173,7 +175,7 @@ Fired when the lightbox has opened (after animation completion)
 __Arguments Received__
 
   1. `e` _(jQuery.Event)_: jQuery event object
-  2. `min` _(Lightbox)_: The minLight instance
+  2. `min` _(Lightbox)_: The minlight instance
 
 Fired when the lightbox is closed (after animation completion)
 
@@ -182,7 +184,7 @@ Fired when the lightbox is closed (after animation completion)
 __Arguments Received__
 
   1. `e` _(jQuery.Event)_: jQuery event object
-  2. `min` _(Lightbox)_: The minLight instance
+  2. `min` _(Lightbox)_: The minlight instance
 
 Fired when the lightbox is about to open (before animation completion)
 
@@ -191,7 +193,7 @@ Fired when the lightbox is about to open (before animation completion)
 __Arguments Received__
 
   1. `e` _(jQuery.Event)_: jQuery event object
-  2. `min` _(Lightbox)_: The minLight instance
+  2. `min` _(Lightbox)_: The minlight instance
 
 Fired when the lightbox is about to close (before animation completion)
 
