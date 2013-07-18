@@ -1,0 +1,14 @@
+{
+  "name": "jquery.minlight",
+  "version": "0.4.8",
+  "main": "dist/minlight.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "Gruntfile.js",
+    "minlight.js",
+    "*.json"
+  ]
+}

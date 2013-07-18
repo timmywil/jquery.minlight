@@ -10,15 +10,15 @@
 (function( factory ) {
 	// Define the plugin using AMD if present
 	// Skips commonjs as this is not meant for that environment
-	if ( typeof define === "function" && define.amd ) {
-		define([ "jquery" ], factory );
+	if ( typeof define === 'function' && define.amd ) {
+		define([ 'jquery' ], factory );
 	} else {
 		factory( jQuery );
 	}
 }(function( $ ) {
-	"use strict";
+	'use strict';
 
-	var datakey = "__minlight",
+	var datakey = '__minlight',
 
 		// Used to convert camelCase to dashed
 		rupper = /([A-Z])/g,
@@ -51,7 +51,7 @@
 
 		// Extend options with any data-* attributes present on the elem
 		$.each( options, function( key ) {
-			var opt = $elem.attr( "data-" + key.replace(rupper, "-$1").toLowerCase() );
+			var opt = $elem.attr( 'data-' + key.replace(rupper, '-$1').toLowerCase() );
 			if ( opt !== undefined ) {
 				options[ key ] = opt;
 			}
@@ -66,27 +66,27 @@
 
 	// All options can be overridden by passing an object literal like any other plugin
 	//   OR with data-* attributes on the element (which can be very useful when calling minLight on more than one element at a time)
-	// e.g. <a href="something.jpg" title="alt text" data-fade-time="300" data-img-width="750" data-container="#main" data-target="#awesome-lightbox">Click here</a>
+	// e.g. <a href='something.jpg' title='alt text' data-fade-time='300' data-img-width='750' data-container='#main' data-target='#awesome-lightbox'>Click here</a>
 	//
 	// Order of precendence: data-* attributes > options passed on creation > defaults
 	Lightbox.defaults = {
 		// Namespace for binding events
-		namespace: ".minlight",
+		namespace: '.minlight',
 		// Animation time in ms
 		fadeTime: 200,
-		easing: "swing",
-		container: "body",
+		easing: 'swing',
+		container: 'body',
 		// Set this to true if you'd like to do your own css transition using your own styles
 		transition: false,
 		// Classes for the lightbox
-		lightboxClass: "lightbox",
-		maskClass: "lightbox-mask",
+		lightboxClass: 'lightbox',
+		maskClass: 'lightbox-mask',
 		// Classes for doing your own transitions
-		openClass: "lightbox-open",
-		closedClass: "lightbox-closed",
+		openClass: 'lightbox-open',
+		closedClass: 'lightbox-closed',
 		// Selector for finding all user-defined close buttons in the target
 		// for quick binding to close
-		closeSelect: "",
+		closeSelect: '',
 		// Close the lightbox when the mask is clicked
 		closeOnMaskClick: true,
 		// Expand the mask to handle document height being larger than window height
@@ -97,14 +97,14 @@
 		// The actual lightbox the element should correspond to
 		// If one already exists hidden on the page,
 		// add its ID selector here
-		target: "",
+		target: '',
 		// Image href (usually assigned from the anchor's href)
-		href: "",
-		imgWidth: "auto",
-		imgHeight: "auto",
+		href: '',
+		imgWidth: 'auto',
+		imgHeight: 'auto',
 		// The basic skeleton for a lightbox
-		// Don"t use a data-* attribute to set this (that's just ugly)
-		skeleton: "<div><a href='#' class='lightbox-close' data-bypass='true'>X</a></div>"
+		// Don't use a data-* attribute to set this (that's just ugly)
+		skeleton: '<div><a href="#" class="lightbox-close" data-bypass="true">X</a></div>'
 		// onOpen, onClose, willOpen, willClose cannot be extended with data-*, so they are included in defaults
 		// they can be passed on creation or changed with the `option` method
 		// they can also be bound on the element as "minlightopen" and "minlightclose"
@@ -140,7 +140,7 @@
 		 */
 		toggle: function( fn ) {
 			// Toggle on click
-			this[ this.opened ? "close" : "open" ]( fn );
+			this[ this.opened ? 'close' : 'open' ]( fn );
 		},
 
 		/**
@@ -157,30 +157,30 @@
 				self = this;
 
 			// Bind minLight events from options
-			$.each([ "Open", "Close" ], function() {
+			$.each([ 'Open', 'Close' ], function() {
 				// onOpen, onClose
-				var m = options[ "on" + this ];
+				var m = options[ 'on' + this ];
 				if ( $.isFunction(m) ) {
-					events[ "minlight" + this.toLowerCase() + ns ] = m;
+					events[ 'minlight' + this.toLowerCase() + ns ] = m;
 				}
 				// willOpen, willClose
-				m = options[ "will" + this ];
+				m = options[ 'will' + this ];
 				if ( $.isFunction(m) ) {
-					events[ "minlightwill" + this.toLowerCase() + ns ] = m;
+					events[ 'minlightwill' + this.toLowerCase() + ns ] = m;
 				}
 			});
 
 			// Use click for links
-			if ( $.nodeName(elem, "a") || $.nodeName(elem, "button") ) {
-				events[ "click" + ns ] = function( e ) {
+			if ( $.nodeName(elem, 'a') || $.nodeName(elem, 'button') ) {
+				events[ 'click' + ns ] = function( e ) {
 					e.preventDefault();
 					self.toggle();
 				};
 
 			// Use focus if focusable
 			// jQuery checks focusable internally when retrieving tabIndex
-			} else if ( (tabIndex = $elem.prop("tabIndex")) !== undefined && tabIndex !== -1 ) {
-				events[ "focus" + ns ] = function() {
+			} else if ( (tabIndex = $elem.prop('tabIndex')) !== undefined && tabIndex !== -1 ) {
+				events[ 'focus' + ns ] = function() {
 					self.open(function() {
 						$elem.blur();
 					});
@@ -195,7 +195,7 @@
 			if ( options.closeOnMaskClick ) {
 				$closers = $closers.add( this.$mask );
 			}
-			$closers.on( "click" + ns, function( e ) {
+			$closers.on( 'click' + ns, function( e ) {
 				e.preventDefault();
 				self.close();
 			});
@@ -231,7 +231,7 @@
 				return $.extend( {}, this.options );
 			}
 
-			if ( typeof key === "string" ) {
+			if ( typeof key === 'string' ) {
 				if ( value === undefined ) {
 					return this.options[ key ];
 				}
@@ -252,42 +252,42 @@
 			var self = this;
 			$.each( options, function( key, value ) {
 				switch( key ) {
-					case "container":
+					case 'container':
 						value = $(value);
 						if ( !value.length ) {
 							return;
 						}
 						value.append( self.$mask, self.$target );
 						break;
-					case "imgWidth":
-					case "imgHeight":
+					case 'imgWidth':
+					case 'imgHeight':
 						// Keep data-* attribute precedence
-						if ( self.$img && self.$elem.attr("data-" + key) === undefined ) {
-							self.$img[ key.replace("img", "").toLowerCase() ]( value );
+						if ( self.$img && self.$elem.attr('data-' + key) === undefined ) {
+							self.$img[ key.replace('img', '').toLowerCase() ]( value );
 						}
 						break;
-					case "target":
-					case "disableMask":
+					case 'target':
+					case 'disableMask':
 						self._removeTarget();
 						/* falls through */
-					case "closeOnMaskClick":
-					case "namespace":
+					case 'closeOnMaskClick':
+					case 'namespace':
 						self.unbind();
 				}
 				self.options[ key ] = value;
 				switch( key ) {
-					case "fadeTime":
-					case "easing":
+					case 'fadeTime':
+					case 'easing':
 						// Rebind so the fadeTime and easing don't need retrieving on every click
 						self.unbind();
 						self.bind();
 						break;
-					case "target":
-					case "disableMask":
+					case 'target':
+					case 'disableMask':
 						self._setTarget();
 						/* falls through */
-					case "closeOnMaskClick":
-					case "namespace":
+					case 'closeOnMaskClick':
+					case 'namespace':
 						self.bind();
 				}
 			});
@@ -300,7 +300,7 @@
 		 */
 		_trigger: function ( name ) {
 			var args = slice.call( arguments, 1 );
-			this.$elem.triggerHandler( "minlight" + name, args.length ? [this].concat(args) : [this] );
+			this.$elem.triggerHandler( 'minlight' + name, args.length ? [this].concat(args) : [this] );
 		},
 
 		/**
@@ -321,13 +321,13 @@
 				fadeTime = options.fadeTime,
 				easing = options.easing,
 				mL = $target.outerWidth() / 2 * -1,
-				str = close ? "close" : "open";
+				str = close ? 'close' : 'open';
 
 			// Trigger will event
-			this._trigger( "will" + str );
+			this._trigger( 'will' + str );
 
 			// Center
-			$target.css( "marginLeft", mL );
+			$target.css( 'marginLeft', mL );
 
 			/**
 			 * Called after the fadeIn or the transition completes
@@ -359,7 +359,7 @@
 				});
 				setTimeout( complete, fadeTime );
 			} else {
-				$target.stop()[ close ? "fadeOut" : "fadeIn" ]( fadeTime, easing, complete );
+				$target.stop()[ close ? 'fadeOut' : 'fadeIn' ]( fadeTime, easing, complete );
 			}
 
 			// Handle mask
@@ -367,7 +367,7 @@
 				if ( !close && options.expandMask ) {
 					this._expandMask();
 				}
-				this.$mask.stop()[ close ? "fadeOut" : "fadeIn" ]( fadeTime, easing );
+				this.$mask.stop()[ close ? 'fadeOut' : 'fadeIn' ]( fadeTime, easing );
 			}
 		},
 
@@ -385,11 +385,11 @@
 			if ( !$target.length ) {
 				// If this is an anchor or is focusable like an input,
 				// create an automated target
-				if ( $.nodeName( elem, "a" ) || ((tabIndex = $elem.prop("tabIndex")) !== undefined && tabIndex !== -1) ) {
+				if ( $.nodeName( elem, 'a' ) || ((tabIndex = $elem.prop('tabIndex')) !== undefined && tabIndex !== -1) ) {
 					// Create a new target if they do not exist on the page
 					if ( !this.content ) {
-						this.content = this.$img = $("<img>").attr({
-							alt: $elem.attr("title"),
+						this.content = this.$img = $('<img>').attr({
+							alt: $elem.attr('title'),
 							src: options.href || elem.href,
 							width: options.imgWidth,
 							height: options.imgHeight
@@ -400,7 +400,7 @@
 						.prepend( this.content );
 
 					// Unescape characters in the selector
-					$target.attr( "id", target.replace("#", "").replace(/\\/g, "") );
+					$target.attr( 'id', target.replace('#', '').replace(/\\/g, '') );
 
 				} else {
 					// Move elem to our container
@@ -409,17 +409,17 @@
 			}
 
 			if ( !$target.length ) {
-				$.error( "minLight - target not found: " + target );
+				$.error( 'minLight - target not found: ' + target );
 			}
 
 			// Add target to the container
 			if ( !$.contains(document, $target[0]) ) {
-				$target.appendTo( options.container ).data( "_minAppended", true );
+				$target.appendTo( options.container ).data( '_minAppended', true );
 			}
 
 			$target
 				.addClass( options.lightboxClass )
-				.data( "_minNumAttached", ($target.data("_minNumAttached") || 0) + 1 );
+				.data( '_minNumAttached', ($target.data('_minNumAttached') || 0) + 1 );
 
 			if ( options.transition ) {
 				$target.addClass( options.closedClass );
@@ -429,16 +429,16 @@
 			if ( options.disableMask ) {
 				this.$mask = $();
 			} else {
-				this.$mask = $target.prev("." + options.maskClass.split(" ")[0] );
+				this.$mask = $target.prev('.' + options.maskClass.split(' ')[0] );
 				if ( !this.$mask.length ) {
-					this.$mask = $("<div>")
+					this.$mask = $('<div>')
 						.addClass( options.maskClass )
 						.insertBefore( $target );
 				}
 			}
 			this.$target = $target;
 			// Cache close buttons
-			this.$close = $target.find(".lightbox-close").add( $target.find( options.closeSelect ) );
+			this.$close = $target.find('.lightbox-close').add( $target.find( options.closeSelect ) );
 		},
 
 		/**
@@ -446,8 +446,8 @@
 		 */
 		_removeTarget: function() {
 			var $target = this.$target,
-				numTargets = $target.data("_minNumAttached"),
-				wasAppended = $target.data("_minAppended");
+				numTargets = $target.data('_minNumAttached'),
+				wasAppended = $target.data('_minAppended');
 
 			if ( !numTargets || numTargets <= 1 ) {
 				// Only remove the target if it was generated by minLight
@@ -459,7 +459,7 @@
 			}
 
 			// Reduce the number of instances even if removed
-			$target.data( "_minNumAttached", numTargets && numTargets - 1 );
+			$target.data( '_minNumAttached', numTargets && numTargets - 1 );
 		},
 
 		/**
@@ -481,15 +481,15 @@
 		var instance, args, m, ret;
 
 		// Call methods widget-style
-		if ( typeof options === "string" ) {
+		if ( typeof options === 'string' ) {
 			ret = [];
 			args = slice.call( arguments, 1 );
 			this.each(function() {
 				instance = $.data( this, datakey );
 
 				// Ignore methods beginning with `_`
-				if ( instance && options.charAt(0) !== "_" &&
-					typeof (m = instance[ options ]) === "function" &&
+				if ( instance && options.charAt(0) !== '_' &&
+					typeof (m = instance[ options ]) === 'function' &&
 					// If nothing is returned, do not add to return values
 					(m = m.apply( instance, args )) !== undefined ) {
 
