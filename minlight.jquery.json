@@ -1,0 +1,33 @@
+{
+  "name": "minlight",
+  "title": "jQuery Minlight",
+  "description": "Minimal Lightboxes made to work with CSS animations and transitions",
+  "keywords": [
+    "minlight",
+    "lightbox",
+    "minimal",
+    "timmywil",
+    "CSS",
+    "transition",
+    "animation"
+  ],
+  "version": "0.5.1",
+  "author": {
+    "name": "Timmy Willison",
+    "email": "timmywillisn@gmail.com",
+    "url": "http://timmywillison.com"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/timmywil/jquery.minlight/blob/master/MIT-License.txt"
+    }
+  ],
+  "bugs": "https://github.com/timmywil/jquery.minlight/issues",
+  "homepage": "http://timmywil.github.io/jquery.minlight/",
+  "docs": "https://github.com/timmywil/jquery.minlight/blob/master/README.md",
+  "download": "https://github.com/timmywil/jquery.minlight/tags",
+  "dependencies": {
+    "jquery": ">=1.4.4"
+  }
+}

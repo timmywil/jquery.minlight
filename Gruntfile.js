@@ -16,6 +16,9 @@ module.exports = function( grunt ) {
 			},
 			bower: {
 				src: 'bower.json'
+			},
+			jquery: {
+				src: 'minlight.jquery.json'
 			}
 		},
 		compare_size: {
@@ -38,6 +41,9 @@ module.exports = function( grunt ) {
 			},
 			bower: {
 				src: 'bower.json'
+			},
+			jquery: {
+				src: 'minlight.jquery.json'
 			}
 		},
 		jshint: {
