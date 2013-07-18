@@ -1,12 +1,14 @@
 # jQuery minlight lightbox plugin
 
-minlight is meant to create the most common, simple lightboxes that use a customizable fading animation. It is also perfectly suited for mobile jQuery projects.
+minlight creates lightboxes. By default, it uses a simple fading javascript animation. However, set the `transition` option to `true` and use your own custom css transitions that you can trigger through the use of classes.
 
-By default, minlight will open/close lightboxes using a simple javascript fade. However, set the `transition` option to `true` and use your own custom css transitions using an `openClass` and a `closedClass`.
+Specify `openClass` and `closedClass` in options, or use the defaults.
 
-Check out [Effeckt.css](http://h5bp.github.io/Effeckt.css/dist/) for performant CSS animations and transitions to use with your lightboxes.
+Check out [Effeckt.css](http://h5bp.github.io/Effeckt.css/dist/) for suggested performant CSS animations and transitions to use with your lightboxes.
 
-minlight.min.js (4.8kb/1.9kb gzip), included in this repo, is compressed with [uglifyjs](https://github.com/mishoo/UglifyJS).
+Due to minlight's tiny footprint, and the fact that it is made to work with CSS (taking advantage of hardward acceleration automatically), it is perfectly suited for mobile.
+
+minlight.min.js (5.0kb/2.1kb gzip!), included in this repo, is compressed with [uglifyjs](https://github.com/mishoo/UglifyJS).
 
 
 ## Loading minlight
