@@ -11,7 +11,7 @@ module.exports = function( grunt ) {
 		pkg: grunt.file.readJSON('package.json'),
 		build: {
 			dist: {
-				dest: 'dist/minlight.js',
+				dest: 'dist/jquery.minlight.js',
 				src: 'minlight.js'
 			},
 			bower: {
@@ -23,8 +23,8 @@ module.exports = function( grunt ) {
 		},
 		compare_size: {
 			files: [
-				'dist/minlight.js',
-				'dist/minlight.min.js'
+				'dist/jquery.minlight.js',
+				'dist/jquery.minlight.min.js'
 			],
 			options: {
 				cache: 'dist/.sizecache.json',
@@ -57,8 +57,8 @@ module.exports = function( grunt ) {
 			}
 		},
 		uglify: {
-			'dist/minlight.min.js': [
-				'dist/minlight.js'
+			'dist/jquery.minlight.min.js': [
+				'dist/jquery.minlight.js'
 			],
 			options: {
 				preserveComments: 'some'

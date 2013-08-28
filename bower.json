@@ -1,7 +1,7 @@
 {
   "name": "jquery.minlight",
-  "version": "0.5.3",
-  "main": "dist/minlight.js",
+  "version": "0.5.4",
+  "main": "dist/jquery.minlight.js",
   "ignore": [
     "**/.*",
     "node_modules",
