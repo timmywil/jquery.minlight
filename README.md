@@ -2,6 +2,8 @@
 
 minlight creates lightboxes. By default, it uses a simple fading javascript animation. However, set the `transition` option to `true` and use your own custom css transitions that you can trigger through the use of classes.
 
+Demos incoming soon.
+
 Specify `openClass` and `closedClass` in options, or use the defaults.
 
 Check out [Effeckt.css](http://h5bp.github.io/Effeckt.css/dist/) for suggested performant CSS animations and transitions to use with your lightboxes.
