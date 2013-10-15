@@ -1,6 +1,10 @@
 {
   "name": "jquery.minlight",
   "version": "0.5.4",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/timmywil/jquery.minlight"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-jshint": "~0.6.0",
