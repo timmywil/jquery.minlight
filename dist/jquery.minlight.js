@@ -1,6 +1,6 @@
 /**
  * @license minlight.js v0.5.4
- * Updated: Wed Aug 28 2013
+ * Updated: Thu Mar 13 2014
  * A minimal lightbox that fades in/out a specified target
  * Copyright (c) 2013 timmy willison
  * Released under the MIT license
@@ -387,7 +387,7 @@
 				// create an automated target
 				if ( $.nodeName( elem, 'a' ) || ((tabIndex = $elem.prop('tabIndex')) !== undefined && tabIndex !== -1) ) {
 					// Create a new target if they do not exist on the page
-					if ( !this.content ) {
+					if ( this.content == null ) {
 						this.content = this.$img = $('<img>').attr({
 							alt: $elem.attr('title'),
 							src: options.href || elem.href,
@@ -412,17 +412,17 @@
 				$.error( 'minlight - target not found: ' + target );
 			}
 
-			// Add target to the container
-			if ( !$.contains(document, $target[0]) ) {
-				$target.appendTo( options.container ).data( '_minAppended', true );
-			}
-
 			$target
 				.addClass( options.lightboxClass )
 				.data( '_minNumAttached', ($target.data('_minNumAttached') || 0) + 1 );
 
 			if ( options.transition ) {
 				$target.addClass( options.closedClass );
+			}
+
+			// Add target to the container
+			if ( !$.contains(document, $target[0]) ) {
+				$target.appendTo( options.container ).data( '_minAppended', true );
 			}
 
 			// Create a mask if it does not exist

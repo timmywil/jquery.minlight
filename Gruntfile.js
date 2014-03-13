@@ -7,6 +7,8 @@ module.exports = function( grunt ) {
 
 	var gzip = require('gzip-js');
 
+	require('load-grunt-tasks')(grunt);
+
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		build: {
@@ -47,13 +49,22 @@ module.exports = function( grunt ) {
 			}
 		},
 		jshint: {
-			all: [
-				'Gruntfile.js',
-				'minlight.js',
-				'test/unit/*.js'
-			],
-			options: {
-				jshintrc: '.jshintrc'
+			source: {
+				options: {
+					jshintrc: '.jshintrc'
+				},
+				src: [
+					'Gruntfile.js',
+					'minlight.js',
+				]
+			},
+			test: {
+				options: {
+					jshintrc: 'test/.jshintrc'
+				},
+				src: [
+					'test/unit/*.js'
+				]
 			}
 		},
 		uglify: {
@@ -71,21 +82,14 @@ module.exports = function( grunt ) {
 		},
 		watch: {
 			files: [
-				'<%= jshint.all %>',
+				'<%= jshint.source.src %>',
+				'<%= jshint.test.src %>',
 				'package.json',
 				'test/index.html'
 			],
 			tasks: 'test'
 		}
 	});
-
-	// Load necessary tasks from NPM packages
-	grunt.loadNpmTasks('grunt-compare-size');
-	grunt.loadNpmTasks('grunt-contrib-jshint');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-contrib-qunit');
-	grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-jsonlint');
 
 	grunt.registerMultiTask(
 		'build',

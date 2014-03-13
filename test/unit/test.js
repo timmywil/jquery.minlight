@@ -1,3 +1,4 @@
+module('environment');
 
 test('Basic requirements', 7, function() {
 	ok( Array.prototype.push, 'Array.push()' );
@@ -7,6 +8,12 @@ test('Basic requirements', 7, function() {
 	ok( RegExp, 'RegExp' );
 	ok( jQuery, 'jQuery' );
 	ok( $, '$' );
+});
+
+module('minlight', {
+	teardown: function() {
+		$('.minlight-link, #minlight-input').minlight('destroy');
+	}
 });
 
 test('Usage', 12, function() {
@@ -75,7 +82,7 @@ test('Input', 4, function() {
 });
 
 test('Transition', 4, function() {
-	var $min = $('.minlight-link').minlight('destroy').minlight({
+	var $min = $('.minlight-link').minlight({
 		transition: true
 	});
 	ok( $min.minlight('option', 'transition'), 'Transition option set' );
@@ -105,4 +112,12 @@ test('No conflict', 1, function() {
 	ok( j('.minlight-link').minlight().data('__minlight'), 'minlight works in noConflict' );
 	// Restore
 	window.$ = window.jQuery = j;
+});
+
+test('content option', function() {
+	expect(1);
+	var min = $('.minlight-link').minlight({
+		content: ''
+	}).minlight('instance');
+	equal(min.$target.html().indexOf('img'), -1, 'An image is not added when content is empty string');
 });

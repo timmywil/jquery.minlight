@@ -29,6 +29,12 @@
     "Modernizr": true,
     "process": true,
     "__dirname": true,
-    "console": true
+    "console": true,
+    "test": true,
+    "ok": true,
+    "start": true,
+    "stop": true,
+    "equal": true,
+    "expect": false
   }
 }
