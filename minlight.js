@@ -320,14 +320,10 @@
 				options = this.options,
 				fadeTime = options.fadeTime,
 				easing = options.easing,
-				mL = $target.outerWidth() / 2 * -1,
 				str = close ? 'close' : 'open';
 
 			// Trigger will event
 			this._trigger( 'will' + str );
-
-			// Center
-			$target.css( 'marginLeft', mL );
 
 			/**
 			 * Called after the fadeIn or the transition completes

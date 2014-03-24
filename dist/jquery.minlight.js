@@ -1,6 +1,6 @@
 /**
  * @license minlight.js v0.5.5
- * Updated: Thu Mar 13 2014
+ * Updated: Mon Mar 24 2014
  * A minimal lightbox that fades in/out a specified target
  * Copyright (c) 2013 timmy willison
  * Released under the MIT license
@@ -320,14 +320,10 @@
 				options = this.options,
 				fadeTime = options.fadeTime,
 				easing = options.easing,
-				mL = $target.outerWidth() / 2 * -1,
 				str = close ? 'close' : 'open';
 
 			// Trigger will event
 			this._trigger( 'will' + str );
-
-			// Center
-			$target.css( 'marginLeft', mL );
 
 			/**
 			 * Called after the fadeIn or the transition completes
