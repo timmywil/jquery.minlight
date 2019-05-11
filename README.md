@@ -1,5 +1,7 @@
 # jQuery minlight
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/timmywil/jquery.minlight.svg)](https://greenkeeper.io/)
+
 minlight creates lightboxes. By default, it uses a simple fading javascript animation. However, set the `transition` option to `true` and use your own custom css transitions that you can trigger through the use of classes.
 
 Demos incoming soon.
